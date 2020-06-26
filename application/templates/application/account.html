@@ -1,0 +1,56 @@
+        {% extends 'application/base.html' %}
+
+
+        {% block content %}
+        {% load static %}
+
+        <!-- Masthead-->
+        {% if user.is_authenticated %}
+
+        <header>
+            <div class="container bg-secondary h-100">
+                <div class="row h-100 d-flex align-items-center justify-content-center text-center">
+                    <h1 class="text-white font-weight-bold">Bienvenue {{ user.get_username }} !</h1>
+                </div>
+            </div>
+        </header>
+
+       
+        <div class="container " id="my-page-content">
+            <!-- <h2 class="text-center mt-0">Colette et Remy</h2>
+            <hr class="divider my-4" /> -->
+            <div class="row more-padding-top">
+
+                <div class="text-center col-12 align-items-center">
+                    <h2>Bienvenue {{ user.username }}</h2>
+                    <h2>Votre email est: {{ user.email }}</h2>
+                    <h2>Vous êtes {% for g in user.gender %} {% if g == "Femme" %}une femme {% elif g == "Homme" %}un homme {% elif g == "Autre" %}autre {% endif %} {% endfor %}</h2>
+                    <h2>Vous êtes {% for s in user.situation %} {% if s == "Cis" %}cisgenre {% elif s == "Trans" %}transgenre {% elif s == "Non-binaire" %}non-binaire {% endif %} {% endfor %}</h2>
+                    <h2>Voici votre présentation : {{ user.about_me }}</h2>
+                </div>
+
+                <div class="text-center col-12 align-items-center">
+                    <h2>Ces informations ne sont plus à jour ?</h2>
+                    <h2>Modifiez-les <a class="nav-link js-scroll-trigger " href="/modify-account">ici</a></h2>
+                </div>
+
+            </div>
+        </div>
+       
+
+        {% else %}
+
+     <!--    <header class="masthead">
+            <div class="container h-100"> -->
+                <div class="row h-100 d-flex align-items-center justify-content-center text-center">
+                    <div class="col-lg-6 text-center">
+                        
+                    </div>
+                </div>
+<!--             </div>
+        </header> -->
+
+
+        {% endif %}
+
+        {% endblock %}

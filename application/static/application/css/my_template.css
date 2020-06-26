@@ -1,0 +1,99 @@
+.my-nav-v-center{
+	display: flex;
+	vertical-align: middle;
+	align-items: center;
+	justify-content: center;
+}
+
+.my-nav-h-center{
+	display: flex;
+	vertical-align: middle;
+	align-items: center;
+	justify-content: center;
+}
+
+.img-presentation{
+	height: 500px; 
+}
+
+#img-to-v-center{
+	position: relative;
+}
+
+#img-to-v-center img{
+	position: absolute; 
+	bottom: 0; 
+	left: 0;
+}
+
+.more-padding-bottom{
+	padding-bottom: 25px;
+}
+
+.more-padding-top{
+	padding-top: 25px;
+}
+
+.nutriscore-icon {
+    background: #DE9440;
+    color: #fff;
+    padding: 5px 20px;
+    border-radius: 50%;
+    font-size: 35px;
+}
+
+.mycontainer {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.nutriscore-top-right {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+}
+
+body{
+	font-family: "Scope One", sans-serif;
+	font-size: 1.2em;
+}
+
+h1, h2, h3, h4{
+	font-family: "Open Sans", sans-serif;
+}
+
+.my-custom-header {
+  overflow: hidden;
+}
+.my-custom-header img {
+  height: 100px;
+}
+
+.jumbotron-fluid {
+    text-shadow: #444 0 1px 1px;
+    color: #FFF;
+    position: relative;
+    height: 40vh;
+
+    display: flex;
+    align-items: center;
+}
+
+.my-nutriscore-letter{
+	font-size: 2em;
+	font-style: bold;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+#my-page-content {
+  min-height: 400px;
+}
+
+#my-sticky-footer {
+  flex-shrink: none;
+}
