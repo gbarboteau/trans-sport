@@ -24,6 +24,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login_view'),
     path('logout/', views.logout_view, name='logout_view'),
     path('account/', views.account, name='account'),
+    re_path(r'^search/$', views.search_places, name='search'),
     path('create-account/', views.create_account, name='create_account'),
     path('modify-account/', views.modify_account, name='modify_account'),
     path('suggesting-new-place/', views.suggesting_new_place, name='suggesting_new_place'),

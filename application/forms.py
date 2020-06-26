@@ -7,6 +7,10 @@ from .models import User, Category, Adress, Place, Comment
 User = get_user_model()
 
 
+class SearchForm(forms.Form):
+    query = forms.CharField(max_length=200)
+
+
 class SignUpForm(UserCreationForm):
     """Form handling users creating an account"""
     username = forms.CharField(max_length=30)

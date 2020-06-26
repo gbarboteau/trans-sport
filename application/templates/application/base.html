@@ -34,10 +34,15 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto my-2 my-lg-0 align-middle">
 
-                        <form class="form-inline my-2 my-lg-0" action="/" method="get"  accept-charset="utf-8">
+                       <!--  <form class="form-inline my-2 my-lg-0" action="/" method="get"  accept-charset="utf-8">
                           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Recherche..." name="query1">
                           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">OK</button>
-                        </form>
+                        </form> -->
+
+                        <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}" method="get">
+                        <input type="text" name="query" class="form-control" placeholder="Rechercher" aria-label="rechercher" maxlength="500" required="" id="id_query" autocomplete="off">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">OK</button>
+                         </form>
 
                         {% if user.is_authenticated %}
                           <li class="nav-item my-nav-v-center"><a class="nav-link js-scroll-trigger " href="/account"><i class="fas fa-user-circle fa-2x" style=" line-height: inherit;"></i></a></li>

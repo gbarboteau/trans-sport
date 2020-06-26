@@ -1,0 +1,54 @@
+        {% extends 'application/base.html' %}
+
+
+        {% block content %}
+        {% load static %}
+
+        <!-- Masthead-->
+        <!-- <div class="jumbotron jumbotron-fluid" style="background-image: linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url({% static 'application/img/bkg.jpg' %}); background-size: cover; height: 500px">
+          <div class="container-fluid text-center">
+            <h2>{{ this_aliment.name }}</h2>
+          </div>
+        </div> -->
+
+        <div class="container">
+            <div class="row more-padding-top">
+
+                {% if queryset|length_is:"0" %}
+                    <div class="text-center col-12 align-items-center" id="my-page-content">
+                      <h2>Samerlipopette, nous n'avons pas trouvé de substitut à cet aliment ! :'(</h2>
+                    </div>
+                {% else %}
+                    <div class="text-center col-12 align-items-center more-padding-top">
+                      <h2>Nous avons trouvé les produits suivants : </h2>
+                    </div>
+                    {% for q in queryset %}
+                        <div class="col-lg-4 col-md-6 text-center center-block align-items-center more-padding-top">
+                            <a href="/all_places/{{ q.id }}">
+                              {{ q.name }}
+                            </a>
+                        </div>
+                        {% if forloop.counter|divisibleby:3 %}<div class="clearfix"></div>{% endif %}
+                    {% endfor %}
+
+                {% endif %}
+
+            </div>
+        </div>
+
+
+        {% if paginate %}
+          <div class="clearfix"></div>
+          <nav aria-label="">
+            <ul class="pagination justify-content-center">
+              {% if queryset.has_previous %}
+                  <li class="page-item more-padding-top"><a class="page-link" href="?{% if queryNum == 1 %}query1={{ query }}&{% elif queryNum == 2 %}query2={{ query }}&{% endif %}page={{ queryset.previous_page_number }}">Précédent</a></li>
+              {% endif %}
+              {% if queryset.has_next %}
+                  <li class="page-item more-padding-top"><a class="page-link" href="?{% if queryNum == 1 %}query1={{ query }}&{% elif queryNum == 2 %}query2={{ query }}&{% endif %}page={{ queryset.next_page_number }}">Suivant</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+
+        {% endblock %}

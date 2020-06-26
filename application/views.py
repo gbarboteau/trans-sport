@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 from .models import User, Category, Adress, Place, Comment
-from .forms import SignUpForm, ConnexionForm, UpdateProfile, PlaceSubmissionForm, CommentForm
+from .forms import SignUpForm, ConnexionForm, UpdateProfile, PlaceSubmissionForm, CommentForm, SearchForm
 from .utils import GetDepartementAndRegion, DoesKeyExists, GetNote
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 User = get_user_model()
 
@@ -132,6 +133,112 @@ def suggesting_new_place(request):
         form = PlaceSubmissionForm()
     context = {'user': my_user, 'form': form, 'errors': form.errors}
     return HttpResponse(template.render(context,request=request))
+
+def search_places(request):
+    query = request.GET.get('query')
+    # template = loader.get_template('application/search.html')
+    # paginator = Paginator(aliments, 9)
+    page = request.GET.get('page')
+    # query_done = False
+    # query = form.cleaned_data.get('query')
+    queryset = Place.objects.filter(name__icontains=query) | Place.objects.filter(adress__street_adress__icontains=query) | Place.objects.filter(adress__region__icontains=query) | Place.objects.filter(adress__departement__icontains=query) | Place.objects.filter(adress__postal_code__icontains=query) | Place.objects.filter(adress__city__icontains=query)
+    paginator = Paginator(queryset, 9)
+    page = request.GET.get('page')
+    try:
+        queryset = paginator.page(page)
+    except PageNotAnInteger:
+        queryset = paginator.page(1)
+    except EmptyPage:
+        queryset = paginator.page(paginator.num_pages)
+    title = "Résultats pour la requête %s"%query
+    context = {'queryset': queryset, 'paginate': True, 'query': query}
+    template = loader.get_template('application/search.html')
+    return HttpResponse(template.render(context, request=request))
+    # else:
+    #     template = loader.get_template('application/index.html')
+    #     return HttpResponse(template.render(request=request))
+
+
+
+
+"""Displays the search view for a given query"""
+    # query = ""
+    # queryNum = 0
+    # if 'query1' in request.GET: #if the navbar form is filled
+    #     query = request.GET.get('query1')
+    #     queryNum = 1
+    # elif 'query2' in request.GET: #if the index page form is filled
+    #     query = request.GET.get('query2')
+    #     queryNum = 2
+    # if not query: #if no form is filled
+    #     aliments = Aliment.objects.all()
+    # else:
+    #     aliments = Aliment.objects.filter(name__icontains=query)
+    # if not aliments.exists():
+    #     aliments = Aliment.objects.filter(category__icontains=query)
+    # paginator = Paginator(aliments, 9)
+    # page = request.GET.get('page')
+    # try:
+    #     aliments = paginator.page(page)
+    # except PageNotAnInteger:
+    #     aliments = paginator.page(1)
+    # except EmptyPage:
+    #     aliments = paginator.page(paginator.num_pages)
+    # title = "Résultats pour la requête %s"%query
+    # context = {'aliments': aliments, 'title': title, 'paginate': True, 'query': query, 'queryNum': queryNum}
+    # template = loader.get_template('application/search.html')
+    # return HttpResponse(template.render(context, request=request))
+        # if queryset.count() <= 0:
+        #     query_done = False
+        # else:
+        #     query_done = True
+        # if query_done == False:
+        #     queryset = Product.objects.filter(adress__street_adress__icontains=research)
+        #     if queryset.count() <= 0:
+        #         query_done = False
+        #     else:
+        #         query_done = True
+        # if query_done == False:
+        #     queryset = Product.objects.filter(adress__street_adress__icontains=research)
+        #     if queryset.count() <= 0:
+        #         query_done = False
+        #     else:
+        #         query_done = True
+
+
+
+
+            
+
+
+
+            # return render(request, self.template_name)
+    # query = ""
+    # queryNum = 0
+    # if 'query1' in request.GET: #if the navbar form is filled
+    #     query = request.GET.get('query1')
+    #     queryNum = 1
+    # elif 'query2' in request.GET: #if the index page form is filled
+    #     query = request.GET.get('query2')
+    #     queryNum = 2
+    # if not query: #if no form is filled
+    #     aliments = Aliment.objects.all()
+    # else:
+    #     aliments = Aliment.objects.filter(name__icontains=query)
+    # if not aliments.exists():
+    #     aliments = Aliment.objects.filter(category__icontains=query)
+    # paginator = Paginator(aliments, 9)
+    # page = request.GET.get('page')
+    # try:
+    #     aliments = paginator.page(page)
+    # except PageNotAnInteger:
+    #     aliments = paginator.page(1)
+    # except EmptyPage:
+    #     aliments = paginator.page(paginator.num_pages)
+    # title = "Résultats pour la requête %s"%query
+    # context = {'aliments': aliments, 'title': title, 'paginate': True, 'query': query, 'queryNum': queryNum}
+    # template = loader.get_template('application/search.html')
+    # return HttpResponse(template.render(context, request=request))
 
 def all_places(request):
     places = Place.objects.all()
