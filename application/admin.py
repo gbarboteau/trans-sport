@@ -18,21 +18,21 @@ class UserAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
-            self.fieldsets = ((None, {'fields': ('category', 'picture',),}),)
+            self.fieldsets = ((None, {'fields': ('name', 'icon',),}),)
             self.readonly_fields = []
         else:
-            self.fieldsets = ((None, {'fields': ('category', 'picture',),}),)
-            self.readonly_fields = ['category', 'picture',]
+            self.fieldsets = ((None, {'fields': ('name', 'icon',),}),)
+            self.readonly_fields = ['name', 'icon',]
         return super(CategoryAdmin,self).get_form(request, obj=None, **kwargs)
 
 
 class PlaceAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
-            self.fieldsets = ((None, {'fields': ('name', 'contact_mail', 'contact_phone', 'can_be_seen', 'adress_id', 'category_id'),}),)
+            self.fieldsets = ((None, {'fields': ('name', 'contact_mail', 'contact_phone', 'can_be_seen', 'adress', 'category'),}),)
             self.readonly_fields = []
         else:
-            self.fieldsets = ((None, {'fields': ('name', 'contact_mail', 'contact_phone', 'can_be_seen', 'adress_id', 'category_id'),}),)
+            self.fieldsets = ((None, {'fields': ('name', 'contact_mail', 'contact_phone', 'can_be_seen', 'adress', 'category'),}),)
             self.readonly_fields = []
         return super(PlaceAdmin,self).get_form(request, obj=None, **kwargs)
 

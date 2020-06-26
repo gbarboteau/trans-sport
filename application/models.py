@@ -22,6 +22,9 @@ class Category(models.Model):
     name = models.TextField()
     icon = models.TextField()
 
+    def __str__(self):
+        return self.name
+
 
 class Adress(models.Model):
     """Model for adresses"""
@@ -44,6 +47,9 @@ class Place(models.Model):
     contact_phone = models.TextField()
     can_be_seen = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
+
 
 class Comment(models.Model):
     """Model for the comments, linked to a given
@@ -55,10 +61,13 @@ class Comment(models.Model):
     comment = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now_add=True, blank=True)
     score_global = models.CharField(max_length=1)
     can_you_enter = models.BooleanField()
     are_you_safe_enough = models.BooleanField()
     is_mixed_lockers = models.BooleanField()
     is_inclusive_lockers = models.BooleanField()
     has_respectful_staff = models.BooleanField()
+
+    def __str__(self):
+        return (self.user.username + " " + self.place.name)
