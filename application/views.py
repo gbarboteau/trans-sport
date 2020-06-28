@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import User, Category, Adress, Place, Comment
 from .forms import SignUpForm, ConnexionForm, UpdateProfile, PlaceSubmissionForm, CommentForm, SearchForm
-from .utils import GetDepartementAndRegion, DoesKeyExists, GetNote
+from .utils import GetCityDepartementAndRegion, DoesKeyExists, GetNote
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -106,8 +106,8 @@ def suggesting_new_place(request):
             try:
                 """Creating a new adress"""
                 # print(form.data['postal_code'])
-                my_departement_and_region = GetDepartementAndRegion(form.data['postal_code'])
-                new_adress = Adress(postal_code=form.data['postal_code'], street_adress=form.data['street_adress'], departement=my_departement_and_region[0], region=my_departement_and_region[1], city=" ") 
+                my_departement_and_region = GetCityDepartementAndRegion(form.data['postal_code'])
+                new_adress = Adress(postal_code=form.data['postal_code'], street_adress=form.data['street_adress'], departement=my_departement_and_region[1], region=my_departement_and_region[2], city=my_departement_and_region[0]) 
                 # this_substitute.save()
                 # print(new_adress)
                 new_adress.save()
