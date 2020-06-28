@@ -100,19 +100,12 @@ def suggesting_new_place(request):
     context = {'user': my_user}
     if request.method == 'POST':
         form = PlaceSubmissionForm(request.POST)
-        # form.actual_user = my_user
         if form.is_valid():
-
             try:
                 """Creating a new adress"""
-                # print(form.data['postal_code'])
                 my_departement_and_region = GetCityDepartementAndRegion(form.data['postal_code'])
                 new_adress = Adress(postal_code=form.data['postal_code'], street_adress=form.data['street_adress'], departement=my_departement_and_region[1], region=my_departement_and_region[2], city=my_departement_and_region[0]) 
-                # this_substitute.save()
-                # print(new_adress)
                 new_adress.save()
-                # print(my_departement_and_region[1])
-
                 """Creating a new place"""
                 new_place = Place(name=form.data['name'], contact_mail=form.data['contact_mail'], contact_phone=form.data['contact_phone'], can_be_seen=False, adress_id=new_adress.id, category_id=form.data['category'])
                 new_place.save()
@@ -136,12 +129,8 @@ def suggesting_new_place(request):
 
 def search_places(request):
     query = request.GET.get('query')
-    # template = loader.get_template('application/search.html')
-    # paginator = Paginator(aliments, 9)
     page = request.GET.get('page')
-    # query_done = False
-    # query = form.cleaned_data.get('query')
-    queryset = Place.objects.filter(name__icontains=query) | Place.objects.filter(adress__street_adress__icontains=query) | Place.objects.filter(adress__region__icontains=query) | Place.objects.filter(adress__departement__icontains=query) | Place.objects.filter(adress__postal_code__icontains=query) | Place.objects.filter(adress__city__icontains=query)
+    queryset = Place.objects.filter(name__icontains=query, can_be_seen=True) | Place.objects.filter(adress__street_adress__icontains=query, can_be_seen=True) | Place.objects.filter(adress__region__icontains=query, can_be_seen=True) | Place.objects.filter(adress__departement__icontains=query, can_be_seen=True) | Place.objects.filter(adress__postal_code__icontains=query, can_be_seen=True) | Place.objects.filter(adress__city__icontains=query, can_be_seen=True)
     paginator = Paginator(queryset, 9)
     page = request.GET.get('page')
     try:
@@ -154,91 +143,7 @@ def search_places(request):
     context = {'queryset': queryset, 'paginate': True, 'query': query}
     template = loader.get_template('application/search.html')
     return HttpResponse(template.render(context, request=request))
-    # else:
-    #     template = loader.get_template('application/index.html')
-    #     return HttpResponse(template.render(request=request))
 
-
-
-
-"""Displays the search view for a given query"""
-    # query = ""
-    # queryNum = 0
-    # if 'query1' in request.GET: #if the navbar form is filled
-    #     query = request.GET.get('query1')
-    #     queryNum = 1
-    # elif 'query2' in request.GET: #if the index page form is filled
-    #     query = request.GET.get('query2')
-    #     queryNum = 2
-    # if not query: #if no form is filled
-    #     aliments = Aliment.objects.all()
-    # else:
-    #     aliments = Aliment.objects.filter(name__icontains=query)
-    # if not aliments.exists():
-    #     aliments = Aliment.objects.filter(category__icontains=query)
-    # paginator = Paginator(aliments, 9)
-    # page = request.GET.get('page')
-    # try:
-    #     aliments = paginator.page(page)
-    # except PageNotAnInteger:
-    #     aliments = paginator.page(1)
-    # except EmptyPage:
-    #     aliments = paginator.page(paginator.num_pages)
-    # title = "Résultats pour la requête %s"%query
-    # context = {'aliments': aliments, 'title': title, 'paginate': True, 'query': query, 'queryNum': queryNum}
-    # template = loader.get_template('application/search.html')
-    # return HttpResponse(template.render(context, request=request))
-        # if queryset.count() <= 0:
-        #     query_done = False
-        # else:
-        #     query_done = True
-        # if query_done == False:
-        #     queryset = Product.objects.filter(adress__street_adress__icontains=research)
-        #     if queryset.count() <= 0:
-        #         query_done = False
-        #     else:
-        #         query_done = True
-        # if query_done == False:
-        #     queryset = Product.objects.filter(adress__street_adress__icontains=research)
-        #     if queryset.count() <= 0:
-        #         query_done = False
-        #     else:
-        #         query_done = True
-
-
-
-
-            
-
-
-
-            # return render(request, self.template_name)
-    # query = ""
-    # queryNum = 0
-    # if 'query1' in request.GET: #if the navbar form is filled
-    #     query = request.GET.get('query1')
-    #     queryNum = 1
-    # elif 'query2' in request.GET: #if the index page form is filled
-    #     query = request.GET.get('query2')
-    #     queryNum = 2
-    # if not query: #if no form is filled
-    #     aliments = Aliment.objects.all()
-    # else:
-    #     aliments = Aliment.objects.filter(name__icontains=query)
-    # if not aliments.exists():
-    #     aliments = Aliment.objects.filter(category__icontains=query)
-    # paginator = Paginator(aliments, 9)
-    # page = request.GET.get('page')
-    # try:
-    #     aliments = paginator.page(page)
-    # except PageNotAnInteger:
-    #     aliments = paginator.page(1)
-    # except EmptyPage:
-    #     aliments = paginator.page(paginator.num_pages)
-    # title = "Résultats pour la requête %s"%query
-    # context = {'aliments': aliments, 'title': title, 'paginate': True, 'query': query, 'queryNum': queryNum}
-    # template = loader.get_template('application/search.html')
-    # return HttpResponse(template.render(context, request=request))
 
 def all_places(request):
     places = Place.objects.all()
@@ -249,11 +154,8 @@ def all_places(request):
 
 def show_place(request, place_id):
     print("path is good")
-    this_place = get_object_or_404(Place, pk=place_id)
+    this_place = get_object_or_404(Place, pk=place_id, can_be_seen=True)
     its_comments = Comment.objects.filter(place_id=this_place.id)
-    # pos_reviews = its_comments.filter(score_global='P').count()
-    # neg_reviews = its_comments.filter(score_global='N').count()
-    # this_place.note_global = GetNote(pos_reviews, neg_reviews)
     this_place.note_global = GetNote(its_comments.filter(score_global='P').count(), its_comments.filter(score_global='N').count())
     this_place.note_can_you_enter = GetNote(its_comments.filter(can_you_enter=True).count(), its_comments.filter(can_you_enter =False).count())
     this_place.note_are_you_safe_enough = GetNote(its_comments.filter(are_you_safe_enough=True).count(), its_comments.filter(are_you_safe_enough =False).count())
@@ -323,23 +225,3 @@ def make_comment(request, place_id):
         form = CommentForm()
     context = {'user': my_user, 'form': form, 'errors': form.errors}
     return HttpResponse(template.render(context,request=request))
-    # context = {}
-    # template = loader.get_template('application/index.html')
-    # return HttpResponse(template.render(context, request=request))
-
-    # name = forms.CharField()
-    # category = forms.ModelChoiceField(queryset = Category.objects.all())
-
-    # street_adress = forms.CharField()
-    # postal_code = forms.CharField(min_length=5, max_length=5)
-
-    # contact_mail = forms.CharField()
-    # contact_phone = forms.CharField()
-
-    # comment = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20, "blank": True}))
-    # score_global = forms.CharField(max_length=1)
-    # can_you_enter = forms.BooleanField(required=False)
-    # are_you_safe_enough = forms.BooleanField(required=False)
-    # is_mixed_lockers = forms.BooleanField(required=False)
-    # is_inclusive_lockers = forms.BooleanField(required=False)
-    # has_respectful_staff = forms.BooleanField(required=False)

@@ -29,7 +29,7 @@ urlpatterns = [
     path('modify-account/', views.modify_account, name='modify_account'),
     path('suggesting-new-place/', views.suggesting_new_place, name='suggesting_new_place'),
     path('all-places/', views.all_places, name='all_places'),
-    re_path(r'^all-places/(?P<place_id>[0-9]+)/$', views.show_place, name='show_place'),
+    re_path(r'^all-places/(?P<place_id>[0-9]+)/', views.show_place, name='show_place'),
     re_path(r'^all-places/(?P<place_id>[0-9]+)/edit-comment/', views.edit_comment, name='edit_comment'),
     re_path(r'^all-places/(?P<place_id>[0-9]+)/make-comment/', views.make_comment, name='make_comment'),
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='application/registration/password_reset_form.html'), name='password_reset'),
