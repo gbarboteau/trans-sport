@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django.contrib.auth.models import Group
-from application.models import User, Category, Adress, Place, Comment
+from application.models import User, Category, Adress, Place, Comment, Profile
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -64,3 +64,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Adress, AdressAdmin)
+admin.site.register(Profile)

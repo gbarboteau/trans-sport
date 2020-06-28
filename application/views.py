@@ -9,6 +9,16 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
+from django.urls import reverse_lazy
+from django.views.generic import View, UpdateView
+from django.contrib import messages
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from django.utils.encoding import force_text
+from .tokens import account_activation_token
+
 User = get_user_model()
 
 def index(request):
@@ -73,25 +83,81 @@ def modify_account(request):
     context = {'user': my_user, 'form': form, 'errors': form.errors}
     return HttpResponse(template.render(context,request=request))
 
-def create_account(request):
-    context = {}
-    template = loader.get_template('application/create-account.html')
-    if request.method == 'POST':
-        form_sign_up = SignUpForm(request.POST)
-        if form_sign_up.is_valid():
-            form_sign_up.save()
-            username = form_sign_up.cleaned_data.get('username')
-            email = form_sign_up.cleaned_data.get('email')
-            password = form_sign_up.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
+# def create_account(request):
+#     context = {}
+#     template = loader.get_template('application/create-account.html')
+#     if request.method == 'POST':
+#         form_sign_up = SignUpForm(request.POST)
+#         if form_sign_up.is_valid():
+#             form_sign_up.save()
+#             username = form_sign_up.cleaned_data.get('username')
+#             email = form_sign_up.cleaned_data.get('email')
+#             password = form_sign_up.cleaned_data.get('password1')
+#             user = authenticate(username=username, password=password)
+#             login(request, user)
+#             return HttpResponse(template.render(context, request=request))
+#         else:
+#             print(form_sign_up.errors)
+#     else:
+#         form_sign_up = SignUpForm()
+#     context = {'form_sign_up': form_sign_up}
+#     return HttpResponse(template.render(context,request=request))
+
+class create_account(View):
+    form_class = SignUpForm
+    template = 'application/create-account.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        context = {'form': form}
+        return render(request, self.template, context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            print("form valide")
+            user = form.save(commit=False)
+            user.is_active = False # Deactivate account till it is confirmed
+            user.save()
+
+            current_site = get_current_site(request)
+            subject = 'Activate Your MySite Account'
+            message = render_to_string('application/registration/account_activation_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            # print("uid : " + str(message.uid) + "\n token : " + str(message.token))
+            user.email_user(subject, message)
+
+            messages.success(request, ('Please Confirm your email to complete registration.'))
+            print("engregistré")
+            return redirect('index')
+
+        return render(request, self.template, {'form': form})
+
+
+class ActivateAccount(View):
+
+    def get(self, request, uidb64, token, *args, **kwargs):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.profile.email_confirmed = True
+            user.save()
             login(request, user)
-            return HttpResponse(template.render(context, request=request))
+            messages.success(request, ('Your account have been confirmed.'))
+            return redirect('index')
         else:
-            print(form_sign_up.errors)
-    else:
-        form_sign_up = SignUpForm()
-    context = {'form_sign_up': form_sign_up}
-    return HttpResponse(template.render(context,request=request))
+            messages.warning(request, ('The confirmation link was invalid, possibly because it has already been used.'))
+            return redirect('index')
+
 
 @login_required
 def suggesting_new_place(request):
