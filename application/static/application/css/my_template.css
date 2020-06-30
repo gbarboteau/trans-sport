@@ -1,4 +1,112 @@
-.my-nav-v-center{
+html,
+body {
+/*  height: 100%;
+  font-size: 1.2em;*/
+  font-family: 'Nunito', sans-serif;
+  background-color: #ffffff;
+}
+
+h1, h2, h3, h4{
+  font-family: "Muli", sans-serif;
+}
+
+p {
+  font-size: 1.2em;
+}
+
+.randomized_image{
+  height: 200px;
+  width: auto;
+}
+
+#my-page-content {
+  min-height: 400px;
+}
+
+#my-sticky-footer {
+  flex-shrink: none;
+}
+
+.navbar{
+  font-family: "Muli", sans-serif;
+  font-weight: 800;
+}
+
+.jumbotron{
+  background: url("/static/application/img/personal_trainer.svg") 100% 0 no-repeat;
+  min-height: 500px;
+  background-size: contain;
+  background-position: 100% 20%;
+}
+
+#container-index-1{
+  background: url("/static/application/img/working_out.svg") 100% 0 no-repeat;
+  min-height: 300px;
+  background-size: contain;
+  background-position: 15% 20%;
+}
+
+#container-index-2{
+  background: url("/static/application/img/basketball.svg") 100% 0 no-repeat;
+  min-height: 300px;
+  background-size: contain;
+  background-position: 85% 20%;
+}
+
+.info-card{
+  opacity: 0.9;
+  border-radius: 25px;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.clearfix {
+  overflow: auto;
+}
+
+@media (max-width: 768px) {
+  .jumbotron{
+    min-height: 800px;
+  }
+}
+
+@mixin clearfix() {
+  &::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+}
+
+/*// Usage as a mixin*/
+.element {
+  @include clearfix;
+}
+
+
+.row.display-inline-block > [class*='col-'] {
+   display: inline-block;
+   float: none;
+   vertical-align: middle;
+   /*padding: 10px;*/
+   /*margin: 10px;*/
+}
+.panel {
+    height: 100%;
+}
+
+/*@media (min-width: 768px) {
+    .row > .col-md-6:nth-child(2n+1) {
+        clear: left;
+        background-color: red;
+    }
+}*/
+
+/*.my-nav-v-center{
 	display: flex;
 	vertical-align: middle;
 	align-items: center;
@@ -24,7 +132,7 @@
 	position: absolute; 
 	bottom: 0; 
 	left: 0;
-}
+}*/
 
 .more-padding-bottom{
 	padding-bottom: 25px;
@@ -34,7 +142,7 @@
 	padding-top: 25px;
 }
 
-.nutriscore-icon {
+/*.nutriscore-icon {
     background: #DE9440;
     color: #fff;
     padding: 5px 20px;
@@ -52,23 +160,18 @@
   position: absolute;
   top: 8px;
   right: 16px;
-}
+}*/
 
-body{
-	font-family: "Scope One", sans-serif;
-	font-size: 1.2em;
-}
 
-h1, h2, h3, h4{
-	font-family: "Open Sans", sans-serif;
-}
 
-.my-custom-header {
+
+
+/*.my-custom-header {
   overflow: hidden;
 }
 .my-custom-header img {
   height: 100px;
-}
+}*/
 
 .jumbotron-fluid {
     text-shadow: #444 0 1px 1px;
@@ -79,21 +182,9 @@ h1, h2, h3, h4{
     display: flex;
     align-items: center;
 }
-
+/*
 .my-nutriscore-letter{
 	font-size: 2em;
 	font-style: bold;
 }
-
-html,
-body {
-  height: 100%;
-}
-
-#my-page-content {
-  min-height: 400px;
-}
-
-#my-sticky-footer {
-  flex-shrink: none;
-}
+*/

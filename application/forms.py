@@ -68,13 +68,16 @@ class UpdateProfile(UserChangeForm):
 
 class PlaceSubmissionForm(forms.Form):
     name = forms.CharField()
+    picture = forms.URLField(required=False)
+    description = forms.CharField()
+    website = forms.URLField(required=False)
     category = forms.ModelChoiceField(queryset = Category.objects.all())
 
     street_adress = forms.CharField()
     postal_code = forms.CharField(min_length=5, max_length=5)
 
-    contact_mail = forms.CharField()
-    contact_phone = forms.CharField()
+    contact_mail = forms.CharField(required=False)
+    contact_phone = forms.CharField(required=False)
 
     comment = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20, "blank": True}))
     score_global = forms.CharField(max_length=1)

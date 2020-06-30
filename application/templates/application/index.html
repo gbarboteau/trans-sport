@@ -4,40 +4,82 @@
 {% block content %}
 {% load static %}
       
-<header class="masthead">
-            <div class="container h-100">
-                <div class="row h-100 d-flex align-items-center justify-content-center text-center">
-                    <div class="col-lg-10 align-self-end">
-                        <h1 class="text-uppercase text-white font-weight-bold">Du gras, oui, mais de qualité !</h1>
-                        <hr class="divider my-4" />
-                    </div>
-                    <div class="col-lg-8 align-self-baseline">
-                        <p class="text-white-75 font-weight-light mb-5">Pur Beurre vous permettra de trouver des substituts plus sains à tous vos produits favoris !<br/>Voyez par vous-même, faites une recherche ci-dessous !</p>
-                        <div class="col-12 d-flex justify-content-center">
-                            <form action="/" method="get"  accept-charset="utf-8">
-                              <div class="form-row align-items-center">
-                                <div class="col-sm-10">
-                                  <label class="sr-only" for="inlineFormInput">Search</label>
-                                  <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Recherche..." name="query2">
-                                </div>
-                                <div class="col-sm-2">
-                                  <button type="submit" class="btn btn-primary mb-2">OK</button>
-                                </div>
-                              </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
 
 
-<div class="container">
-        <div class="row align-items-center more-padding-top">
-          <div class="col-12 center-block more-padding-bottom" style="text-align:center;">
-              <p class="italic-small-title">J'aime la pop musique</p>
-          </div>
-        </div>
+<div class="jumbotron jumbotron-fluid bg-primary">
+  <div class="container">
+    <div class= "row">
+      <div class="col-xl-6 col-lg-8 col-12 info-card bg-secondary">
+        <h1 class="display-4">Pousser la fonte ne devrait pas être un privilège</h1>
+        <h3 class="lead">Trans-Sport est un annuaire communautaire regroupant des salles de sports, des espaces et des associations sportives trans-friendly.</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="container-index-1">
+  <div class="container more-padding-top more-padding-bottom" >
+    <div class="row more-padding-top">
+      <!-- <div class="col-lg-3 col-md-2 col-0"></div> -->
+      <div class="col-md-6 col-12 ml-auto info-card bg-primary text-white ">
+        <h3>Nous cherchons à regrouper le plus de lieux possibles pour permettre aux personnes transgenres de pratiquer une activité sportive dans de bonnes conditions. </h3>
+      </div>
+      <!-- <div class="col-lg-3 col-md-2 col-0"></div> -->
+    </div>
+  </div>
+  <div class="container more-padding-top more-padding-bottom" >
+    <div class="row more-padding-top">
+      <!-- <div class="col-lg-3 col-md-2 col-0"></div> -->
+      <div class="col-12 ml-auto info-card bg-primary text-white ">
+        <h4>Les personnes trans font face à des challenges uniques lorsqu'elles cherchent à pratiquer une activité sportive : accès aux vestiaires, espaces quasi-systématiquement genrés (y compris lorsque ce n'est pas nécessaire), personnel non-formé... Tout cela a pour effet de restreindre l'accès des personnes trans au sport, que ce soit par l'existence de lieux les discriminant, ou par la peur de tomber sur un de ces lieux par manque de chance et d'informations.</br>L'objectif de Trans-Sport est justement d'agir sur cette information, en regroupant des lieux et associations jugées trans-friendly par d'autres utilisateurices. Vous pouvez donc ajouter de nouveaux lieux s'ils ne sont pas présent dans notre annuaire, et laisser un avis sur les lieux déja présents.</h4>
+      </div>
+      <!-- <div class="col-lg-3 col-md-2 col-0"></div> -->
+    </div>
+  </div>
+</div>
+
+<div class="bg-secondary">
+  <div class="container more-padding-top more-padding-bottom text-center">
+    <div class="row display-inline-block info-card bg-white">
+      <div class="col-12 panel more-padding-top" style="display:inline-block; float:none">
+        <h1 class="text-center">Le hasard faisant bien les choses, nous vous recommandons :</h1>
+        <!-- <a style="vertical-align: text-bottom;">text-bottom</a> -->
+      </div>
+      {% for place in random_places %}
+      <div class="col-md-6 col-12 info-card bg-white panel more-padding-top" style="display:inline-block; float:none">
+        <a href="/all-places/{{ place.id }}"><h2>{{ place.name }}</h2></a>
+        <img class="randomized_image" src = {{ place.picture }}>
+        <p>{{ place.description }}</p>
+        <p>Situé à {{ place.adress.city }}</p>
+      </div>
+      {% endfor %}
+
+      <div class="col-12 info-card bg-white panel more-padding-top" style="display:inline-block; float:none">
+        <a class="text-center" href="/all-places"><h3>Accéder à la liste de tous les lieux enregistrés</h3></a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="container-index-2">
+  <div class="container more-padding-top more-padding-bottom">
+    <div class="row">
+      <div class="col-md-1 col-0"></div>
+      <div class="col-md-6 col-12">
+        <h1>Envie de suggérer un lieu ?{% if user.is_authenticated%} <a href="{% url 'suggesting_new_place' %}">C'est par ici !</a>{% else %} <a href="{% url 'create_account' %}">Créez-vous tout d'abord un compte !</a>{% endif %}</h1>
+        <br/>
+        <p>Vous pouvez aussi :
+          <ul>
+            <li>Visiter le site d'<a href="https://www.acceptess-t.com/sport">Acceptees-T</a> pour plus d'informations liées aux personnes trans et le sport</li>
+            <li>Visiter le <a href="https://wikitrans.co/">WikiTrans</a> pour des informations d'ordres plus généralistes</li>
+          </ul>
+
+        </p>
+      </div>
+      <!-- <div class="col-lg-3 col-md-2 col-0"></div> -->
+    </div>
+  </div>
 </div>
 
 

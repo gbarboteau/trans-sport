@@ -29,10 +29,10 @@ class CategoryAdmin(admin.ModelAdmin):
 class PlaceAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
-            self.fieldsets = ((None, {'fields': ('name', 'contact_mail', 'contact_phone', 'can_be_seen', 'adress', 'category'),}),)
+            self.fieldsets = ((None, {'fields': ('name', 'picture', 'description', 'website', 'contact_mail', 'contact_phone', 'can_be_seen', 'adress', 'category'),}),)
             self.readonly_fields = []
         else:
-            self.fieldsets = ((None, {'fields': ('name', 'contact_mail', 'contact_phone', 'can_be_seen', 'adress', 'category'),}),)
+            self.fieldsets = ((None, {'fields': ('name', 'picture', 'description', 'website', 'contact_mail', 'contact_phone', 'can_be_seen', 'adress', 'category'),}),)
             self.readonly_fields = []
         return super(PlaceAdmin,self).get_form(request, obj=None, **kwargs)
 

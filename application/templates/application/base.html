@@ -5,15 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Trans-sport, car pousser la fonte ne devrait pas être un privilège</title>
+        <title>Trans-Sport, car pousser la fonte ne devrait pas être un privilège</title>
         {% load static %}
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="{% static 'application/img/muscle-favicon.png' %}" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css2?family=Muli:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Nunito:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
         <!-- Third party plugin CSS-->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
@@ -22,57 +21,55 @@
         <link rel="stylesheet" type="text/css" href="{% static 'application/css/bootstrap/bootstrap.css' %}">
         <!-- Custom CSS -->
         <link rel="stylesheet" type="text/css" href="{% static 'application/css/my_template.css' %}">
-        <!-- Fonts -->
-        <link href="http://fonts.googleapis.com/css?family=Scope+One" rel="stylesheet" type="text/css">
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
     </head>
-    <body id="page-top page-content" class="d-flex flex-column">
+
+
+    <body class="d-flex flex-column">
+
+
+
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 bg-primary" id="mainNav">
-            <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="/"><img src="{% static 'application/img/muscle-favicon.png' %}"></img>  <img src="{% static 'application/img/flag-favicon.png' %}"></img> Trans-sport</a><button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto my-2 my-lg-0 align-middle">
-
-                       <!--  <form class="form-inline my-2 my-lg-0" action="/" method="get"  accept-charset="utf-8">
-                          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Recherche..." name="query1">
-                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">OK</button>
-                        </form> -->
-
-                        <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}" method="get">
-                        <input type="text" name="query" class="form-control" placeholder="Rechercher" aria-label="rechercher" maxlength="500" required="" id="id_query" autocomplete="off">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">OK</button>
-                         </form>
-
-                        {% if user.is_authenticated %}
-                          <li class="nav-item my-nav-v-center"><a class="nav-link js-scroll-trigger " href="/account"><i class="fas fa-user-circle fa-2x" style=" line-height: inherit;"></i></a></li>
-                          <li class="nav-item my-nav-v-center"><a class="nav-link js-scroll-trigger" href="/mesproduits"><i class="fas fa-carrot fa-2x align-middle"></i></a></li>
-                          <li class="nav-item my-nav-v-center"><a class="nav-link js-scroll-trigger" href="/logout"><i class="fas fa-sign-out-alt fa-2x align-middle"></i></a></li>
-                        {% else %}
-                          <li class="nav-item my-nav-v-center"><a class="nav-link js-scroll-trigger " href="/login"><i class="fas fa-user-circle fa-2x" style=" line-height: inherit;"></i></a></li>
-                        {% endif %}
-                    </ul>
-                </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+          <div class="container">
+            <a class="navbar-brand js-scroll-trigger" href="/"><img src="{% static 'application/img/muscle-favicon.png' %}"></img>  <img src="{% static 'application/img/flag-favicon.png' %}"></img> Trans-Sport</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav ml-auto">
+                <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}" method="get">
+                  <input type="text" name="query" class="form-control" placeholder="Rechercher" aria-label="rechercher" maxlength="500" required="" id="id_query" autocomplete="off">
+                  <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">OK</button>
+                </form>
+                {% if user.is_authenticated %}
+                  <a class="nav-item nav-link" href="/account"><i class="fas fa-user-circle fa-2x" style=" line-height: inherit;"></i></a>
+                  <a class="nav-item nav-link" href="/logout"><i class="fas fa-sign-out-alt fa-2x align-middle"></i></a>
+                {% else %}
+                  <a class="nav-item nav-link" href="/login"><i class="fas fa-user-circle fa-2x" style=" line-height: inherit;"></i></a>
+                {% endif %}
+              </div>
             </div>
+          </div>
         </nav>
 
+      
         {% block content %}{% endblock %}
 
         <!-- Footer-->
-        <footer class="py-5 bg-primary" id="my-sticky-footer">
-            <!-- <div class="container"> -->
+        <footer class="py-5 bg-primary text-white" id="my-sticky-footer">
+            <div class="container">
               <div class="row">
                 <div class="col-md-4">
-                  <div class="small text-center text-muted more-padding-bottom"><a href="/mentionslegales">Mentions légales</a></div>
+                  <div class="small text-center more-padding-bottom"><a class="text-white" href="/mentionslegales">Mentions légales</a></div>
                 </div>
                 <div class="col-md-4">
-                  <div class="small text-center text-muted more-padding-bottom">Copyright Gabrielle Barboteau © 2020</div>
+                  <div class="small text-center more-padding-bottom"><a class="text-white" href="https://twitter.com/GBarboteau">Copyright Gabrielle Barboteau © 2020</a><br/><a class="small text-center more-padding-bottom"><a class="text-white" href="https://undraw.co/">Illustrations par Katerina Limpitsouni</a></div>
                 </div>
                 <div class="col-md-4">
-                  <div class="small text-center text-muted"><a href="mailto:contact@purbeurre.com">Contact</a></div>
+                  <div class="small text-center"><a class="text-white" href="mailto:trans.sport.france@gmail.com">Contact</a></div>
                 </div>
               </div>
-            <!-- </div> -->
+            </div>
         </footer>
 
         <!-- Bootstrap core JS-->
@@ -85,3 +82,4 @@
     <script src="{% static 'application/js/bootstrap/scripts.js' %}"></script>
     </body>
 </html>
+

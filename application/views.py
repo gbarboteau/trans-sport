@@ -18,12 +18,15 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text
 from .tokens import account_activation_token
+import random
 
 User = get_user_model()
 
 def index(request):
+    all_places = Place.objects.all()
+    random_places = random.sample(list(all_places), 2)
     template = loader.get_template('application/index.html')
-    context = {}
+    context = {'random_places': random_places}
     return HttpResponse(template.render(context,request=request))
 
 def login_view(request):
@@ -173,7 +176,7 @@ def suggesting_new_place(request):
                 new_adress = Adress(postal_code=form.data['postal_code'], street_adress=form.data['street_adress'], departement=my_departement_and_region[1], region=my_departement_and_region[2], city=my_departement_and_region[0]) 
                 new_adress.save()
                 """Creating a new place"""
-                new_place = Place(name=form.data['name'], contact_mail=form.data['contact_mail'], contact_phone=form.data['contact_phone'], can_be_seen=False, adress_id=new_adress.id, category_id=form.data['category'])
+                new_place = Place(name=form.data['name'], picture=form.data['picture'], description=form.data['description'], website=form.data['website'], contact_mail=form.data['contact_mail'], contact_phone=form.data['contact_phone'], can_be_seen=False, adress_id=new_adress.id, category_id=form.data['category'])
                 new_place.save()
                 """Creating a new comment"""
                 new_comment = Comment(comment=form.data['comment'], score_global=form.data['score_global'], can_you_enter=DoesKeyExists('can_you_enter', form.data), are_you_safe_enough=DoesKeyExists('are_you_safe_enough', form.data), is_mixed_lockers=DoesKeyExists('is_mixed_lockers', form.data), is_inclusive_lockers=DoesKeyExists('is_inclusive_lockers', form.data), has_respectful_staff=DoesKeyExists('has_respectful_staff', form.data), place_id=new_place.id, user_id=my_user.id)

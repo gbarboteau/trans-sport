@@ -43,10 +43,13 @@ class Place(models.Model):
         constraints = [models.UniqueConstraint(fields=['category', 'adress'], name='saved_place')]
 
     name = models.TextField()
+    picture = models.TextField(blank=True)
+    description = models.TextField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     adress = models.ForeignKey(Adress, on_delete=models.CASCADE)
-    contact_mail = models.TextField()
-    contact_phone = models.TextField()
+    website = models.TextField(blank=True)
+    contact_mail = models.TextField(blank=True)
+    contact_phone = models.TextField(blank=True)
     can_be_seen = models.BooleanField(default=False)
 
     def __str__(self):
