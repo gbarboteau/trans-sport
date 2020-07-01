@@ -37,7 +37,7 @@
                             <h2 class="h4 mb-2 text-dark">Créer un compte</h2>
                             <form method="post" class="text-dark">
                               {% csrf_token %}
-                              {% for field in form_sign_up %}
+                              {% for field in form %}
                                 <p>
                                   {{ field.label_tag }}<br>
                                   {{ field }}

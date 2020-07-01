@@ -57,4 +57,3 @@ def GetNote(positive_reviews, negative_reviews):
         ratio = positive_reviews / total_notes
     note = ratio * 5
     return round(note, 1) 
-

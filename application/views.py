@@ -86,25 +86,6 @@ def modify_account(request):
     context = {'user': my_user, 'form': form, 'errors': form.errors}
     return HttpResponse(template.render(context,request=request))
 
-# def create_account(request):
-#     context = {}
-#     template = loader.get_template('application/create-account.html')
-#     if request.method == 'POST':
-#         form_sign_up = SignUpForm(request.POST)
-#         if form_sign_up.is_valid():
-#             form_sign_up.save()
-#             username = form_sign_up.cleaned_data.get('username')
-#             email = form_sign_up.cleaned_data.get('email')
-#             password = form_sign_up.cleaned_data.get('password1')
-#             user = authenticate(username=username, password=password)
-#             login(request, user)
-#             return HttpResponse(template.render(context, request=request))
-#         else:
-#             print(form_sign_up.errors)
-#     else:
-#         form_sign_up = SignUpForm()
-#     context = {'form_sign_up': form_sign_up}
-#     return HttpResponse(template.render(context,request=request))
 
 class create_account(View):
     form_class = SignUpForm
@@ -112,6 +93,7 @@ class create_account(View):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
+        print(form)
         context = {'form': form}
         return render(request, self.template, context)
 
