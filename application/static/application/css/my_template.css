@@ -54,8 +54,11 @@ p {
 }
 
 .info-card{
+  border-radius: 15px;
+}
+
+.less-opacity{
   opacity: 0.9;
-  border-radius: 25px;
 }
 
 .clearfix::after {
@@ -188,3 +191,7 @@ p {
 	font-style: bold;
 }
 */
+
+.container-listing{
+  min-height: 750px;
+}

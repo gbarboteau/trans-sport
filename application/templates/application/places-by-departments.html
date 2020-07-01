@@ -3,12 +3,12 @@
 
 {% block content %}
 {% load static %}
-      
+
 <div class="container container-listing align-items-center justify-content-center text-center more-padding-top more-padding-bottom">
             <!-- Masthead-->
     <div class="row ">
         <div class="col-12">
-            <h4>Voici tous les lieux et associations recensées sur notre site :</h4>
+            <h4>Voici tous les lieux et associations trouvées dans le {{ postal_code }} :</h4>
         </div>
         {% for place in places %}
           {% if place.can_be_seen %}<div class="col-md-6 col-12 more-padding-top"><a href="/all-places/{{ place.id }}"><p>{{ place.name }}</p></a></div>{% endif %}
@@ -17,4 +17,9 @@
 </div>
 
 
+
+
 {% endblock %}
+
+
+<!-- h-100 d-flex align-items-center justify-content-center text-center -->

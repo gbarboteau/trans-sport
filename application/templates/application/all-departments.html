@@ -1,0 +1,23 @@
+{% extends 'application/base.html' %}
+
+
+{% block content %}
+{% load static %}
+      
+<div class="container container-listing align-items-center justify-content-center text-center more-padding-top more-padding-bottom">
+            <!-- Masthead-->
+    <div class="row ">
+        <div class="col-12">
+            <h4>Nous avons trouvé des lieux dans les départements suivants:</h4>
+        </div>
+        {% for department in departments %}
+          <div class="col-md-6 col-12 more-padding-top"><a href="/all-departments/{{ department.postal_code }}"><p>{{ department.postal_code }} - {{ department.department }}</p></a></div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+<!-- h-100 d-flex align-items-center justify-content-center text-center -->

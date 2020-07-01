@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import User, Category, Adress, Place, Comment
 from .forms import SignUpForm, ConnexionForm, UpdateProfile, PlaceSubmissionForm, CommentForm, SearchForm
-from .utils import GetCityDepartementAndRegion, DoesKeyExists, GetNote
+from .utils import GetCityDepartementAndRegion, GetZipCodeFromDepartment, DoesKeyExists, GetNote
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -23,7 +23,7 @@ import random
 User = get_user_model()
 
 def index(request):
-    all_places = Place.objects.all()
+    all_places = Place.objects.filter(can_be_seen=True)
     random_places = random.sample(list(all_places), 2)
     template = loader.get_template('application/index.html')
     context = {'random_places': random_places}
@@ -135,7 +135,6 @@ class create_account(View):
             user.email_user(subject, message)
 
             messages.success(request, ('Please Confirm your email to complete registration.'))
-            print("engregistré")
             return redirect('index')
 
         return render(request, self.template, {'form': form})
@@ -180,8 +179,6 @@ def suggesting_new_place(request):
                 new_place.save()
                 """Creating a new comment"""
                 new_comment = Comment(comment=form.data['comment'], score_global=form.data['score_global'], can_you_enter=DoesKeyExists('can_you_enter', form.data), are_you_safe_enough=DoesKeyExists('are_you_safe_enough', form.data), is_mixed_lockers=DoesKeyExists('is_mixed_lockers', form.data), is_inclusive_lockers=DoesKeyExists('is_inclusive_lockers', form.data), has_respectful_staff=DoesKeyExists('has_respectful_staff', form.data), place_id=new_place.id, user_id=my_user.id)
-                print(form.data['comment'])
-                print(new_comment.comment)
                 new_comment.save()
 
                 context = {'is_added': True}
@@ -197,9 +194,17 @@ def suggesting_new_place(request):
     return HttpResponse(template.render(context,request=request))
 
 def search_places(request):
-    query = request.GET.get('query')
+    my_query = ""
+    # queryNum = 0
+    if 'query' in request.GET: #if the navbar form is filled
+        my_query = request.GET.get('query')
+        # queryNum = 1
+    elif 'query_index' in request.GET: #if the index page form is filled
+        my_query = request.GET.get('query_index')
+        # queryNum = 2
+    # my_query = request.GET.get('query')
     page = request.GET.get('page')
-    queryset = Place.objects.filter(name__icontains=query, can_be_seen=True) | Place.objects.filter(adress__street_adress__icontains=query, can_be_seen=True) | Place.objects.filter(adress__region__icontains=query, can_be_seen=True) | Place.objects.filter(adress__departement__icontains=query, can_be_seen=True) | Place.objects.filter(adress__postal_code__icontains=query, can_be_seen=True) | Place.objects.filter(adress__city__icontains=query, can_be_seen=True)
+    queryset = Place.objects.filter(name__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__street_adress__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__region__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__departement__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__postal_code__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__city__icontains=my_query, can_be_seen=True)
     paginator = Paginator(queryset, 9)
     page = request.GET.get('page')
     try:
@@ -208,21 +213,35 @@ def search_places(request):
         queryset = paginator.page(1)
     except EmptyPage:
         queryset = paginator.page(paginator.num_pages)
-    title = "Résultats pour la requête %s"%query
-    context = {'queryset': queryset, 'paginate': True, 'query': query}
+    title = "Résultats pour la requête %s"%my_query
+    context = {'queryset': queryset, 'paginate': True, 'query': my_query}
     template = loader.get_template('application/search.html')
     return HttpResponse(template.render(context, request=request))
 
 
 def all_places(request):
     places = Place.objects.all()
-    print(places)
     context = {'places': places}
     template = loader.get_template('application/all-places.html')
     return HttpResponse(template.render(context, request=request))
 
+def all_departments(request):
+    departments = Place.objects.filter(can_be_seen=True).values('adress__departement').distinct()
+    departments_with_zip_code = []
+    for department in departments:
+        departments_with_zip_code.append(GetZipCodeFromDepartment(list(department.values())[0]))
+    print(departments_with_zip_code)
+    context = {'departments': departments_with_zip_code}
+    template = loader.get_template('application/all-departments.html')
+    return HttpResponse(template.render(context, request=request))
+
+def places_by_departments(request, postal_code):
+    places = Place.objects.filter(can_be_seen=True, adress__postal_code__startswith=postal_code)
+    context = {'places': places, 'postal_code': postal_code}
+    template = loader.get_template('application/places-by-departments.html')
+    return HttpResponse(template.render(context, request=request))
+
 def show_place(request, place_id):
-    print("path is good")
     this_place = get_object_or_404(Place, pk=place_id, can_be_seen=True)
     its_comments = Comment.objects.filter(place_id=this_place.id)
     this_place.note_global = GetNote(its_comments.filter(score_global='P').count(), its_comments.filter(score_global='N').count())

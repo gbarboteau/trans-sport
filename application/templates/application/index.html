@@ -9,7 +9,7 @@
 <div class="jumbotron jumbotron-fluid bg-primary">
   <div class="container">
     <div class= "row">
-      <div class="col-xl-6 col-lg-8 col-12 info-card bg-secondary">
+      <div class="col-xl-6 col-lg-8 col-12 info-card less-opacity bg-secondary">
         <h1 class="display-4">Pousser la fonte ne devrait pas être un privilège</h1>
         <h3 class="lead">Trans-Sport est un annuaire communautaire regroupant des salles de sports, des espaces et des associations sportives trans-friendly.</h3>
       </div>
@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<div id="container-index-1">
+<div id="container-index-1" class="more-padding-bottom">
   <div class="container more-padding-top more-padding-bottom" >
     <div class="row more-padding-top">
       <!-- <div class="col-lg-3 col-md-2 col-0"></div> -->
@@ -28,15 +28,37 @@
     </div>
   </div>
   <div class="container more-padding-top more-padding-bottom" >
-    <div class="row more-padding-top">
+    <div class="row">
       <!-- <div class="col-lg-3 col-md-2 col-0"></div> -->
-      <div class="col-12 ml-auto info-card bg-primary text-white ">
+      <div class="col-12 ml-auto info-card bg-primary text-white">
         <h4>Les personnes trans font face à des challenges uniques lorsqu'elles cherchent à pratiquer une activité sportive : accès aux vestiaires, espaces quasi-systématiquement genrés (y compris lorsque ce n'est pas nécessaire), personnel non-formé... Tout cela a pour effet de restreindre l'accès des personnes trans au sport, que ce soit par l'existence de lieux les discriminant, ou par la peur de tomber sur un de ces lieux par manque de chance et d'informations.</br>L'objectif de Trans-Sport est justement d'agir sur cette information, en regroupant des lieux et associations jugées trans-friendly par d'autres utilisateurices. Vous pouvez donc ajouter de nouveaux lieux s'ils ne sont pas présent dans notre annuaire, et laisser un avis sur les lieux déja présents.</h4>
       </div>
-      <!-- <div class="col-lg-3 col-md-2 col-0"></div> -->
+      <div class="col-12 more-padding-top more-padding-bottom"></div>
+      <div class="ml-auto info-card bg-primary text-white">
+        <div class="col-12"> 
+          <h3 class="display-4">Intéressé.e ? Cherchez donc un lieu dans notre annuaire !</h3>
+        </div>
+        <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}" method="get">
+          <div class="col-sm-10">
+            <input type="text" style="min-width: 100%!important;" name="query_index" class="form-control mb-2" id="inlineFormInput" placeholder="Rechercher" aria-label="rechercher" maxlength="500" required="" id="id_query" autocomplete="off">
+          </div>
+          <div class="col-sm-2">
+            <button class="btn btn-secondary mb-2" type="submit">OK</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- 
+<div class="col-sm-10">
+                                  <label class="sr-only" for="inlineFormInput">Search</label>
+                                  <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Recherche..." name="query2">
+                                </div>
+                                <div class="col-sm-2">
+                                  <button type="submit" class="btn btn-primary mb-2">OK</button>
+                                </div> -->
 
 <div class="bg-secondary">
   <div class="container more-padding-top more-padding-bottom text-center">
