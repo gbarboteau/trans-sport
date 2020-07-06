@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.template import loader
 from .models import User, Category, Adress, Place, Comment
 from .forms import SignUpForm, ConnexionForm, UpdateProfile, PlaceSubmissionForm, CommentForm, SearchForm
@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import View, UpdateView
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
@@ -19,6 +19,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_text
 from .tokens import account_activation_token
 import random
+from django.contrib import messages
 
 User = get_user_model()
 
@@ -31,27 +32,31 @@ def index(request):
 
 def login_view(request):
     """Displays the account view and the user login form"""
-    context = {}
-    state = ""
-    if request.method == "POST":
-        form = ConnexionForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
-            # gender = form.cleaned_data["gender"]
-            # situation = form.cleaned_data["situation"]
-            user = authenticate(username=username, password=password)  
-            if user:
-                login(request, user) 
-            else: 
-                state = "Votre username ou mot de passe est incorrect."
-        else: 
-            print(form.errors)
+    if request.user.is_authenticated:
+        return redirect('index')
     else:
-        form = ConnexionForm()
-    template = loader.get_template('application/login.html')
-    context = {'form': form, 'state': state}
-    return HttpResponse(template.render(context, request=request))
+        context = {}
+        state = ""
+        if request.method == "POST":
+            form = ConnexionForm(request.POST)
+            if form.is_valid():
+                username = form.cleaned_data["username"]
+                password = form.cleaned_data["password"]
+                # gender = form.cleaned_data["gender"]
+                # situation = form.cleaned_data["situation"]
+                user = authenticate(username=username, password=password)  
+                if user:
+                    login(request, user)
+                    return redirect('index') 
+                else: 
+                    state = "Votre username ou mot de passe est incorrect."
+            else: 
+                print(form.errors)
+        else:
+            form = ConnexionForm()
+        template = loader.get_template('application/login.html')
+        context = {'form': form, 'state': state}
+        return HttpResponse(template.render(context, request=request))
 
 def logout_view(request):
     """Log out the user and redirect the user to
@@ -93,7 +98,6 @@ class create_account(View):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
-        print(form)
         context = {'form': form}
         return render(request, self.template, context)
 
@@ -115,9 +119,11 @@ class create_account(View):
             })
             # print("uid : " + str(message.uid) + "\n token : " + str(message.token))
             user.email_user(subject, message)
-
-            messages.success(request, ('Please Confirm your email to complete registration.'))
-            return redirect('index')
+            context = {}
+            messages.success(request, 'Veuillez confirmer votre adresse email pour terminer le processus de création de compte')
+            
+            return render(request, self.template, context)
+            # return redirect('index')
 
         return render(request, self.template, {'form': form})
 
@@ -136,10 +142,10 @@ class ActivateAccount(View):
             user.profile.email_confirmed = True
             user.save()
             login(request, user)
-            messages.success(request, ('Your account have been confirmed.'))
+            messages.success(request, ('Votre compte est utilisable'))
             return redirect('index')
         else:
-            messages.warning(request, ('The confirmation link was invalid, possibly because it has already been used.'))
+            messages.warning(request, ("Le lien de confirmation est invalide. L'avez-vous déjà utilisé ?"))
             return redirect('index')
 
 
@@ -163,17 +169,19 @@ def suggesting_new_place(request):
                 new_comment = Comment(comment=form.data['comment'], score_global=form.data['score_global'], can_you_enter=DoesKeyExists('can_you_enter', form.data), are_you_safe_enough=DoesKeyExists('are_you_safe_enough', form.data), is_mixed_lockers=DoesKeyExists('is_mixed_lockers', form.data), is_inclusive_lockers=DoesKeyExists('is_inclusive_lockers', form.data), has_respectful_staff=DoesKeyExists('has_respectful_staff', form.data), place_id=new_place.id, user_id=my_user.id)
                 new_comment.save()
 
-                context = {'is_added': True}
+                is_added = True
             except IntegrityError as error:
-                context = {'is_added': False}
-            template = loader.get_template('application/index.html')
-            return HttpResponse(template.render(context, request=request))
+                is_added = False
+            context = {'user': my_user, 'form': form, 'errors': form.errors}
+            messages.success(request, 'Form submission successful')
+            return HttpResponse(template.render(context,request=request))
+
         else:
             print(form.errors)
     else:
         form = PlaceSubmissionForm()
-    context = {'user': my_user, 'form': form, 'errors': form.errors}
-    return HttpResponse(template.render(context,request=request))
+        context = {'user': my_user, 'form': form, 'errors': form.errors}
+        return HttpResponse(template.render(context,request=request))
 
 def search_places(request):
     my_query = ""
@@ -246,29 +254,36 @@ def edit_comment(request, place_id):
     my_user = request.user
     template = loader.get_template('application/edit-comment.html')
     context = {'user': my_user}
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            try:
-                edited_comment = get_object_or_404(Comment, place_id=place_id, user_id=my_user.id)
-                edited_comment.comment = form.data['comment']
-                edited_comment.score_global = form.data['score_global']
-                edited_comment.can_you_enter = DoesKeyExists('can_you_enter', form.data)
-                edited_comment.are_you_safe_enough = DoesKeyExists('are_you_safe_enough', form.data)
-                edited_comment.is_mixed_lockers = DoesKeyExists('is_mixed_lockers', form.data)
-                edited_comment.is_inclusive_lockers = DoesKeyExists('is_inclusive_lockers', form.data)
-                edited_comment.has_respectful_staff = DoesKeyExists('has_respectful_staff', form.data)
-                edited_comment.save()
-                context = {'is_added': True}
-            except IntegrityError as error:
-                context = {'is_added': False}
-            return HttpResponse(template.render(context, request=request))
+    if Comment.objects.filter(user_id=my_user.id).exists():
+        if request.method == 'POST':
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                try:
+                    edited_comment = get_object_or_404(Comment, place_id=place_id, user_id=my_user.id)
+                    edited_comment.comment = form.data['comment']
+                    edited_comment.score_global = form.data['score_global']
+                    edited_comment.can_you_enter = DoesKeyExists('can_you_enter', form.data)
+                    edited_comment.are_you_safe_enough = DoesKeyExists('are_you_safe_enough', form.data)
+                    edited_comment.is_mixed_lockers = DoesKeyExists('is_mixed_lockers', form.data)
+                    edited_comment.is_inclusive_lockers = DoesKeyExists('is_inclusive_lockers', form.data)
+                    edited_comment.has_respectful_staff = DoesKeyExists('has_respectful_staff', form.data)
+                    edited_comment.save()
+                    is_added = True
+                except IntegrityError as error:
+                    is_added = False
+                context = {'user': my_user, 'form': form, 'errors': form.errors, 'is_added': is_added}
+                # return HttpResponse(template.render(context, request=request))
+                return redirect(reverse('show_place', args=[place_id]))
+            else:
+                print(form.errors)
         else:
-            print(form.errors)
+            form = CommentForm()
+            context = {'user': my_user, 'form': form, 'errors': form.errors}
+            return HttpResponse(template.render(context,request=request))
     else:
-        form = CommentForm()
-    context = {'user': my_user, 'form': form, 'errors': form.errors}
-    return HttpResponse(template.render(context,request=request))
+        raise Http404
+        return HttpResponse(template.render(context, request=request))
+
 
 @login_required
 def make_comment(request, place_id):
@@ -279,19 +294,20 @@ def make_comment(request, place_id):
         form = CommentForm(request.POST)
         # form.actual_user = my_user
         if form.is_valid():
-
             try:
                 new_comment = Comment(comment=form.data['comment'], score_global=form.data['score_global'], can_you_enter=DoesKeyExists('can_you_enter', form.data), are_you_safe_enough=DoesKeyExists('are_you_safe_enough', form.data), is_mixed_lockers=DoesKeyExists('is_mixed_lockers', form.data), is_inclusive_lockers=DoesKeyExists('is_inclusive_lockers', form.data), has_respectful_staff=DoesKeyExists('has_respectful_staff', form.data), place_id=place_id, user_id=my_user.id)
                 print(form.data['comment'])
                 print(new_comment.comment)
                 new_comment.save()
-                context = {'is_added': True}
+                is_added = True
             except IntegrityError as error:
-                context = {'is_added': False}
+                is_added = False
+            context = {'user': my_user, 'form': form, 'errors': form.errors, 'is_added': is_added}
+            # return HttpResponse(template.render(context, request=request))
             return HttpResponse(template.render(context, request=request))
         else:
             print(form.errors)
     else:
         form = CommentForm()
-    context = {'user': my_user, 'form': form, 'errors': form.errors}
-    return HttpResponse(template.render(context,request=request))
+        context = {'user': my_user, 'form': form, 'errors': form.errors}
+        return HttpResponse(template.render(context,request=request))

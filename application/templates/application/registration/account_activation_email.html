@@ -1,7 +1,9 @@
 {% autoescape off %}
-Hi {{ user.username }},
+Bonjour {{ user.username }},
 
-Please click on the link below to confirm your registration:
+Cliquez sur le lien ci-dessous pour confirmer votre compte :
 
 http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+L'équipe Trans-sport
 {% endautoescape %}

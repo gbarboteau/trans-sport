@@ -80,7 +80,14 @@ class PlaceSubmissionForm(forms.Form):
     contact_phone = forms.CharField(required=False)
 
     comment = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20, "blank": True}))
-    score_global = forms.CharField(max_length=1)
+
+    NOTES_POSSIBLES= [
+    ('P', 'Positive'),
+    ('O', 'Neutre'),
+    ('N', 'Négative'),
+    ]
+
+    score_global = forms.CharField(label='Evaluation', widget=forms.RadioSelect(choices=NOTES_POSSIBLES))
     can_you_enter = forms.BooleanField(required=False)
     are_you_safe_enough = forms.BooleanField(required=False)
     is_mixed_lockers = forms.BooleanField(required=False)
@@ -90,7 +97,14 @@ class PlaceSubmissionForm(forms.Form):
 
 class CommentForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20, "blank": True}))
-    score_global = forms.CharField(max_length=1)
+    
+    NOTES_POSSIBLES= [
+    ('P', 'Positive'),
+    ('O', 'Neutre'),
+    ('N', 'Négative'),
+    ]
+
+    score_global = forms.CharField(label='Evaluation', widget=forms.RadioSelect(choices=NOTES_POSSIBLES))
     can_you_enter = forms.BooleanField(required=False)
     are_you_safe_enough = forms.BooleanField(required=False)
     is_mixed_lockers = forms.BooleanField(required=False)
