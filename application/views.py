@@ -78,7 +78,7 @@ def modify_account(request):
     template = loader.get_template('application/modify-account.html')
     context = {'user': my_user}
     if request.method == 'POST':
-        form = UpdateProfile(request.POST, initial={'username': my_user.username, 'email': my_user.email, 'gender': my_user.gender, 'situation': my_user.situation}, instance=my_user)
+        form = UpdateProfile(request.POST, initial={'username': my_user.username, 'gender': my_user.gender, 'situation': my_user.situation, 'about_me': my_user.about_me}, instance=my_user)
         form.actual_user = my_user
         if form.is_valid():
             form.save()
@@ -87,7 +87,7 @@ def modify_account(request):
         else:
             print(form.errors)
     else:
-        form = UpdateProfile(initial={'username': my_user.username, 'email': my_user.email, 'gender': my_user.gender, 'situation': my_user.situation}, instance=my_user)
+        form = UpdateProfile(initial={'username': my_user.username, 'gender': my_user.gender, 'situation': my_user.situation, 'about_me': my_user.about_me}, instance=my_user)
     context = {'user': my_user, 'form': form, 'errors': form.errors}
     return HttpResponse(template.render(context,request=request))
 
@@ -252,14 +252,15 @@ def show_place(request, place_id):
 @login_required
 def edit_comment(request, place_id):
     my_user = request.user
+    edited_comment = get_object_or_404(Comment, place_id=place_id, user_id=my_user.id)
     template = loader.get_template('application/edit-comment.html')
     context = {'user': my_user}
     if Comment.objects.filter(user_id=my_user.id).exists():
         if request.method == 'POST':
-            form = CommentForm(request.POST)
+            form = CommentForm(request.POST, initial={'comment': edited_comment.comment, 'score_global': edited_comment.score_global, 'can_you_enter': edited_comment.can_you_enter, 'are_you_safe_enough': edited_comment.are_you_safe_enough, 'is_mixed_lockers': edited_comment.is_mixed_lockers, 'is_inclusive_lockers': edited_comment.is_inclusive_lockers, 'has_respectful_staff': edited_comment.has_respectful_staff})
             if form.is_valid():
                 try:
-                    edited_comment = get_object_or_404(Comment, place_id=place_id, user_id=my_user.id)
+                    # edited_comment = get_object_or_404(Comment, place_id=place_id, user_id=my_user.id)
                     edited_comment.comment = form.data['comment']
                     edited_comment.score_global = form.data['score_global']
                     edited_comment.can_you_enter = DoesKeyExists('can_you_enter', form.data)
@@ -277,7 +278,7 @@ def edit_comment(request, place_id):
             else:
                 print(form.errors)
         else:
-            form = CommentForm()
+            form = CommentForm(initial={'comment': edited_comment.comment, 'score_global': edited_comment.score_global, 'can_you_enter': edited_comment.can_you_enter, 'are_you_safe_enough': edited_comment.are_you_safe_enough, 'is_mixed_lockers': edited_comment.is_mixed_lockers, 'is_inclusive_lockers': edited_comment.is_inclusive_lockers, 'has_respectful_staff': edited_comment.has_respectful_staff})
             context = {'user': my_user, 'form': form, 'errors': form.errors}
             return HttpResponse(template.render(context,request=request))
     else:

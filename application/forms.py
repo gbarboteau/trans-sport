@@ -44,7 +44,6 @@ class ConnexionForm(forms.Form):
 
 class UpdateProfile(UserChangeForm):
     username = forms.CharField(max_length=30)
-    email = forms.EmailField(max_length=200)
     about_me = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20, "blank": True}), required=False)
 
     GENDERS = (
@@ -63,7 +62,7 @@ class UpdateProfile(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'gender', 'situation', 'about_me')
+        fields = ('username', 'gender', 'situation', 'about_me')
 
 
 class PlaceSubmissionForm(forms.Form):
@@ -111,28 +110,11 @@ class CommentForm(forms.Form):
     is_inclusive_lockers = forms.BooleanField(required=False)
     has_respectful_staff = forms.BooleanField(required=False)
 
+    # def __init__(self, *args, **kwargs):
+    #     self.fields['category_list'] = forms.ChoiceField(
+    #         choices=[(cat.id, cat.name) for cat in Category.objects.all()],
+    #         required=False,
+    #         )
 
-    # comment = models.TextField()
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # place = models.ForeignKey(Place, on_delete=models.CASCADE)
-    # date = models.DateTimeField()
-    # score_global = models.CharField(max_length=1)
-    # can_you_enter = models.BooleanField()
-    # are_you_safe_enough = models.BooleanField()
-    # is_mixed_lockers = models.BooleanField()
-    # is_inclusive_lockers = models.BooleanField()
-    # has_respectful_staff = models.BooleanField()
-
-
-    # region = models.TextField()
-    # departement = models.TextField()
-    # postal_code = models.TextField(max_length=5)
-    # city = models.TextField()
-    # street_adress = models.TextField()
-
-    # name = models.TextField()
-    # category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    # adress = models.ForeignKey(Adress, on_delete=models.CASCADE)
-    # contact_mail = models.TextField()
-    # contact_phone = models.TextField()
-    # can_be_seen = models.BooleanField(default=False)
+    class Meta:
+        fields = ('comment', 'score_global', 'can_you_enter', 'are_you_safe_enough', 'is_mixed_lockers', 'is_inclusive_lockers', 'has_respectful_staff')
