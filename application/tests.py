@@ -90,8 +90,6 @@ class IndexPageTestCase(TestCase):
     def test_index_page(self):
         test_place_1 = get_object_or_404(Place, name='Bar à Chicha de Knuckles')
         test_place_2 = get_object_or_404(Place, name='Kebab de Robotnik')
-        print(test_place_1.name)
-        print(test_place_2.name)
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
@@ -155,23 +153,60 @@ class AccountTestCase(TestCase):
 
 
 class CreateAccountTestCase(TestCase):
-    pass
+    """Tests of the create-account view"""
+    def test_create_account_page(self):
+        """Checks if the page is accessible"""
+        response = self.client.get(reverse('create_account'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_account_creation(self):
+        """Checks if users can create an account"""
+        response = self.client.post(reverse('create_account'), {'username':"Yoshi54", 'email':"yoshi54@caramail.com", 'password1':"FANDECYRILHANOUNA", 'password2':"FANDECYRILHANOUNA", 'gender':['Femme'], 'situation':['Trans']})
+        self.assertEqual(response.status_code, 200)
 
 
-class ModifyAccountTestCase(TestCase):
-    pass
+# class ModifyAccountTestCase(TestCase):
+#     pass
 
 
-class ActivateAccountTestCase(TestCase):
-    pass
+# class ActivateAccountTestCase(TestCase):
+#     pass
 
 
-class SuggestingNewPlaceTestCase(TestCase):
-    pass
+# class SuggestingNewPlaceTestCase(TestCase):
+#     pass
 
 
 class SearchPlacesTestCase(TestCase):
-    pass
+    """Tests of the index view"""
+    def setUp(self):
+        user = User.objects.create_user(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA", gender=['Femme'], situation=['Trans'])
+        user.save()
+
+    def test_search_page_not_logged_in(self):
+        """Checks if the page is not accessible when
+        users aren't logged in
+        """
+        response = self.client.get(reverse('search'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_search_page_logged_in(self):
+        """Checks if the page is accessible when
+        users are logged in
+        """
+        self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
+        response = self.client.get(reverse('search'))
+        self.assertEqual(response.status_code, 200)
+
+
+
+
+
+
+
+
+
+
 
 
 class AllPlacesTestCase(TestCase):
@@ -216,7 +251,6 @@ class AllDepartmentsTestCase(TestCase):
         departments_with_zip_code = []
         for department in departments:
             departments_with_zip_code.append(GetZipCodeFromDepartment(list(department.values())[0]))
-        print(departments_with_zip_code)
         response = self.client.get(reverse('all_departments'))
         self.assertEqual(response.status_code, 200)
 
@@ -303,7 +337,6 @@ class MakeCommentDepartmentTestCase(TestCase):
         self.client.login(username="Kirby54", password="FANDECYRILHANOUNA")
         test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
         # test_comment = Comment.objects.get(comment="très bon", score_global='P', can_you_enter=True, are_you_safe_enough=True, is_mixed_lockers=False, is_inclusive_lockers=False, has_respectful_staff=False)
-        print(test_place[0].id)
         response = self.client.get('/all-places/' + str(test_place[0].id) + '/make-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)
 

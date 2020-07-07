@@ -220,7 +220,6 @@ def all_departments(request):
     departments_with_zip_code = []
     for department in departments:
         departments_with_zip_code.append(GetZipCodeFromDepartment(list(department.values())[0]))
-    print(departments_with_zip_code)
     context = {'departments': departments_with_zip_code}
     template = loader.get_template('application/all-departments.html')
     return HttpResponse(template.render(context, request=request))
@@ -245,7 +244,6 @@ def show_place(request, place_id):
     for comment in its_comments:
         if comment.user == request.user:
             does_comment_exists = True
-    print("does comment exists : " + str(does_comment_exists))
     context = {'this_place': this_place, 'its_comments': its_comments, 'does_comment_exists': does_comment_exists, 'place_id': place_id}
     return HttpResponse(template.render(context,request=request))
 
@@ -297,8 +295,6 @@ def make_comment(request, place_id):
         if form.is_valid():
             try:
                 new_comment = Comment(comment=form.data['comment'], score_global=form.data['score_global'], can_you_enter=DoesKeyExists('can_you_enter', form.data), are_you_safe_enough=DoesKeyExists('are_you_safe_enough', form.data), is_mixed_lockers=DoesKeyExists('is_mixed_lockers', form.data), is_inclusive_lockers=DoesKeyExists('is_inclusive_lockers', form.data), has_respectful_staff=DoesKeyExists('has_respectful_staff', form.data), place_id=place_id, user_id=my_user.id)
-                print(form.data['comment'])
-                print(new_comment.comment)
                 new_comment.save()
                 is_added = True
             except IntegrityError as error:
