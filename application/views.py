@@ -43,8 +43,6 @@ def login_view(request):
             if form.is_valid():
                 username = form.cleaned_data["username"]
                 password = form.cleaned_data["password"]
-                # gender = form.cleaned_data["gender"]
-                # situation = form.cleaned_data["situation"]
                 user = authenticate(username=username, password=password)  
                 if user:
                     login(request, user)
@@ -79,7 +77,7 @@ def modify_account(request):
     template = loader.get_template('application/modify-account.html')
     context = {'user': my_user}
     if request.method == 'POST':
-        form = UpdateProfile(request.POST, initial={'username': my_user.username, 'gender': my_user.gender, 'situation': my_user.situation, 'about_me': my_user.about_me}, instance=my_user)
+        form = UpdateProfile(request.POST, initial={'username': my_user.username, 'gender': my_user.gender, 'about_me': my_user.about_me}, instance=my_user)
         form.actual_user = my_user
         if form.is_valid():
             form.save()
@@ -88,7 +86,7 @@ def modify_account(request):
         else:
             print(form.errors)
     else:
-        form = UpdateProfile(initial={'username': my_user.username, 'gender': my_user.gender, 'situation': my_user.situation, 'about_me': my_user.about_me}, instance=my_user)
+        form = UpdateProfile(initial={'username': my_user.username, 'gender': my_user.gender, 'about_me': my_user.about_me}, instance=my_user)
     context = {'user': my_user, 'form': form, 'errors': form.errors}
     return HttpResponse(template.render(context,request=request))
 

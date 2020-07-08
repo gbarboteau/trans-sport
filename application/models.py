@@ -10,8 +10,7 @@ from django.dispatch import receiver
 
 class User(AbstractUser):
     """Model for a customized user model"""
-    gender = ArrayField(models.CharField(max_length=255), default=False)
-    situation = ArrayField(models.CharField(max_length=255), default=False)
+    gender = models.CharField(max_length=255)
     is_admin = models.BooleanField(default=False)
     is_moderator = models.BooleanField(default=False)
     about_me = models.TextField(blank=True)

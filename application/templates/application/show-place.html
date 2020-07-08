@@ -57,7 +57,7 @@
         <div class="row info-card {% if forloop.counter|divisibleby:2 %}bg-secondary{% else %}bg-primary{% endif %} more-padding-top more-padding-bottom"> 
 
                 <div class="col-4"><h3>{{ comment.user.username }}</h3></div>
-                <div class="col-4"><p>{{ comment.user.gender }}, {{ comment.user.situation }}</p></div>
+                <div class="col-4"><p>{{ comment.user.gender }}</p></div>
                 <div class="col-4"><p>Evaluation {% if comment.score_global == "P" %}positive{% elif comment.score_global == "N" %}négative{% else %}neutre{% endif %}</p></div>
                 <div class="col-12"><p>{% if comment.can_you_enter %}Peut entrer dans le lieu {% endif %}{% if comment.are_you_safe_enough %}S'est senti-e en sécurité {% endif %}{% if comment.is_mixed_lockers %}A pu utiliser des vestiaires mixtes {% endif %}{% if comment.is_inclusive_lockers %}A pu avoir accès aux vestiaires {% endif %}{% if comment.has_respectful_staff %}Le personnel rencontré a été respectueux {% endif %}</p></div>
                 <div class="col-12 text-left"><h4>{{ comment.comment }}</h4></div>

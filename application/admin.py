@@ -7,11 +7,11 @@ from application.models import User, Category, Adress, Place, Comment, Profile
 class UserAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         if request.user.is_superuser:
-            self.fieldsets = ((None, {'fields': ('username', 'email', 'last_login', 'user_permissions', 'is_superuser', 'is_staff', 'is_active', 'gender', 'situation', 'about_me'),}),)
+            self.fieldsets = ((None, {'fields': ('username', 'email', 'last_login', 'user_permissions', 'is_superuser', 'is_staff', 'is_active', 'gender', 'about_me'),}),)
             self.readonly_fields = []
         else:
-            self.fieldsets = ((None, {'fields': ('username', 'email', 'last_login', 'is_staff', 'is_active', 'gender', 'situation', 'about_me'),}),)
-            self.readonly_fields = ['username', 'email', 'last_login', 'is_staff', 'gender', 'situation', 'about_me',]
+            self.fieldsets = ((None, {'fields': ('username', 'email', 'last_login', 'is_staff', 'is_active', 'gender', 'about_me'),}),)
+            self.readonly_fields = ['username', 'email', 'last_login', 'is_staff', 'gender', 'about_me',]
         return super(UserAdmin,self).get_form(request, obj=None, **kwargs)
 
 

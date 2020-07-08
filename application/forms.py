@@ -17,22 +17,18 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=200)
 
     GENDERS = (
-        ("Femme", "femme"),
-        ("Homme", "homme"),
-        ("Autre", "autre")
+        ("Femme trans", "femme trans"),
+        ("Femme cis", "femme cis"),
+        ("Homme trans", "homme trans"),
+        ("Homme cis", "homme cis"),
+        ("Personne non-binaire", "personne non-binaire"),
+        ("Autre identité", "autre identité")
     )
-    gender = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=GENDERS)
-
-    SITUATIONS = (
-        ("Trans", "trans"),
-        ("Cis", "cis"),
-        ("Non-binaire", "non-binaire")
-    )
-    situation = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=SITUATIONS)
+    gender = forms.CharField(label='Genre', widget=forms.RadioSelect(choices=GENDERS))
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'gender', 'situation', 'password1', 'password2', )
+        fields = ('username', 'email', 'gender', 'password1', 'password2', )
         # fields = ('username', 'email', 'is_woman', 'is_man', 'is_other', 'is_trans', 'is_cis', 'is_nb', 'password1', 'password2', )
 
 
@@ -47,22 +43,18 @@ class UpdateProfile(UserChangeForm):
     about_me = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20, "blank": True}), required=False)
 
     GENDERS = (
-        ("Femme", "femme"),
-        ("Homme", "homme"),
-        ("Autre", "autre")
+        ("Femme trans", "femme trans"),
+        ("Femme cis", "femme cis"),
+        ("Homme trans", "homme trans"),
+        ("Homme cis", "homme cis"),
+        ("Personne non-binaire", "personne non-binaire"),
+        ("Autre identité", "autre identité")
     )
-    gender = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=GENDERS)
-
-    SITUATIONS = (
-        ("Trans", "trans"),
-        ("Cis", "cis"),
-        ("Non-binaire", "non-binaire")
-    )
-    situation = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=SITUATIONS)
+    gender = forms.CharField(label='Genre', widget=forms.RadioSelect(choices=GENDERS))
 
     class Meta:
         model = User
-        fields = ('username', 'gender', 'situation', 'about_me')
+        fields = ('username', 'gender', 'about_me')
 
 
 class PlaceSubmissionForm(forms.Form):
