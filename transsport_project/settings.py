@@ -30,7 +30,7 @@ if os.environ.get('ENV') == 'PRODUCTION':
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'trans-sport.herokuapp.com', 'trans-sport.fr', '.herokuapp.com',]
+ALLOWED_HOSTS = ['127.0.0.1', 'trans-sport.herokuapp.com', '.herokuapp.com',]
 
 
 # Application definition
@@ -61,7 +61,7 @@ ROOT_URLCONF = 'transsport_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # on utilise l'adaptateur postgresql
         'NAME': 'transsport', # le nom de notre base de donnees creee precedemment
         'USER': 'Gabrielle', # attention : remplacez par votre nom d'utilisateur
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD')
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -118,7 +118,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "purbeurre9999@gmail.com"
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') 
 DEFAULT_FROM_EMAIL = 'Pur Beurre <purbeurre9999@gmail.com>'
 
 
@@ -140,6 +140,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
 
 if os.environ.get('ENV') == 'PRODUCTION':
 
