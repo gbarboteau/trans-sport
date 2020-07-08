@@ -117,7 +117,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "purbeurre9999@gmail.com"
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = os.environ.get('SECRET_KEY')
 DEFAULT_FROM_EMAIL = 'Pur Beurre <purbeurre9999@gmail.com>'
 
 
