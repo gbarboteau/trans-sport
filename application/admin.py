@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django import forms
-from django.contrib.auth.models import Group
 from application.models import User, Category, Adress, Place, Comment, Profile
 
 

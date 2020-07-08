@@ -84,8 +84,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # on utilise l'adaptateur postgresql
         'NAME': 'transsport', # le nom de notre base de donnees creee precedemment
-        'USER': 'gabrielle', # attention : remplacez par votre nom d'utilisateur
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'USER': 'Gabrielle', # attention : remplacez par votre nom d'utilisateur
+        'PASSWORD': os.environ.get('PASSWORD'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
