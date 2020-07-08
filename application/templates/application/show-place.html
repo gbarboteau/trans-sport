@@ -19,6 +19,7 @@
             <h4><a href="{{ this_place.website }}">Site internet</a></h4>
             <h4>{{ this_place.contact_mail }}</h4>
             <h4>{{ this_place.contact_phone }}</h4>
+            
         </div>
         <div class="col-md-6 col-12 more-padding-top more-padding-bottom">
             <h2>Note globale : {{ this_place.note_global }}/5</h2>
@@ -32,6 +33,18 @@
                 </ul>
             </h4>
         </div>
+        <div class="col-12 more-padding-top more-padding-bottom" id="map">{{ coordinates }}, {{ coordinates }}</div>
+        <script type='text/javascript'>
+        function initMap(lat, lng) {
+          // The location of Uluru
+          var uluru = {lat: {{ latitude }}, lng: {{ longitude }}};
+          // The map, centered at Uluru
+          var map = new google.maps.Map(
+              document.getElementById('map'), {zoom: 15, center: uluru});
+          // The marker, positioned at Uluru
+          var marker = new google.maps.Marker({position: uluru, map: map});
+        }
+        </script>
     </div>
 
     <div class="col-12 more-padding-top more-padding-bottom"></div>
@@ -62,6 +75,11 @@
         <!-- </div> -->
     
 </div>
+
+
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&callback=initMap"></script>
+<script src="{% static 'application/js/utils.js' %}" type=text/javascript></script>
 
 {% endblock %}
 

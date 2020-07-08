@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404
 from django.template import loader
 from .models import User, Category, Adress, Place, Comment
 from .forms import SignUpForm, ConnexionForm, UpdateProfile, PlaceSubmissionForm, CommentForm, SearchForm
-from .utils import GetCityDepartementAndRegion, GetZipCodeFromDepartment, DoesKeyExists, GetNote
+from .utils import GetCityDepartementAndRegion, GetZipCodeFromDepartment, DoesKeyExists, GetNote, GetCoordinates
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -20,6 +20,7 @@ from django.utils.encoding import force_text
 from .tokens import account_activation_token
 import random
 from django.contrib import messages
+from django.conf import settings
 
 User = get_user_model()
 
@@ -241,10 +242,11 @@ def show_place(request, place_id):
     this_place.note_has_respectful_staff = GetNote(its_comments.filter(has_respectful_staff=True).count(), its_comments.filter(has_respectful_staff =False).count())
     template = loader.get_template('application/show-place.html')
     does_comment_exists = False
+    coordinates = GetCoordinates(this_place.adress.street_adress, this_place.adress.postal_code)
     for comment in its_comments:
         if comment.user == request.user:
             does_comment_exists = True
-    context = {'this_place': this_place, 'its_comments': its_comments, 'does_comment_exists': does_comment_exists, 'place_id': place_id}
+    context = {'this_place': this_place, 'its_comments': its_comments, 'does_comment_exists': does_comment_exists, 'place_id': place_id, 'latitude': coordinates[0], 'longitude': coordinates[1], 'GOOGLE_API_KEY': settings.GOOGLE_API_KEY}
     return HttpResponse(template.render(context,request=request))
 
 @login_required

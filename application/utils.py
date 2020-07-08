@@ -1,5 +1,6 @@
-import json
+import json, requests
 import os
+from django.conf import settings
 
 
 def GetCityDepartementAndRegion(postal_code):
@@ -57,3 +58,13 @@ def GetNote(positive_reviews, negative_reviews):
         ratio = positive_reviews / total_notes
     note = ratio * 5
     return round(note, 1) 
+
+def GetCoordinates(street_adress, postal_code):
+    # GOOGLE_API_KEY
+    myRequest = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + street_adress + postal_code + "&key=" + settings.GOOGLE_API_KEY)      #(GOOGLE_MAP_ADRESS + "?key=" + GOOGLE_MAP_KEY + "&inputtype=textquery&input=" + search)
+    myInfos = myRequest.json()
+    latitude = myInfos["results"][0]["geometry"]["location"]["lat"]
+    longitude = myInfos["results"][0]["geometry"]["location"]["lng"]
+    print(latitude)
+    print(longitude)
+    return(latitude, longitude)
