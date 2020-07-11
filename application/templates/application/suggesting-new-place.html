@@ -17,19 +17,70 @@
                             {{ form.as_p }}
                             <input type="submit" value="Se connecter" /> -->
                             {% csrf_token %}
-                              {% for field in form %}
-                                <p>
-                                  {{ field.label_tag }}<br>
-                                  {{ field }}
-                                  {% if field.help_text %}
-                                    <small>{{ field.help_text }}</small>
-                                  {% endif %}
-                                </p>
-                              {% endfor %}
+                              <div class="info-card more-padding-top more-padding-bottom" style="width: 100%;">
+                                <div class="col-12 ">
+                                    <p>Nom du lieu : {{ form.name }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Lien de l'image : {{ form.picture }}</p>
+                                </div>
+                                <div class="col-12 ">
+                                    <p>Description : </p>
+                                    <p>{{ form.description }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Catégorie : {{ form.category }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Site internet : {{ form.website }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Adresse mail : {{ form.contact_mail }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Téléphone :  {{ form.contact_phone }}</p>
+                                </div>
+                              </div>
+
+                              <div class="info-card bg-secondary text-white more-padding-top more-padding-bottom" style="width: 100%;">
+
+                                <div class="col-12 text-center">
+                                    <p>Adresse postale : {{ form.street_adress }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Ville (renseignez le code postal) : {{ form.postal_code }}</p>
+                                </div>
+
+                              </div>
+
+                              <div class="info-card more-padding-top" style="width: 100%;">
+                                <div class="col-12 ">
+                                    <p>Votre avis : </p>
+                                    <p>{{ form.comment }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Evaluation : {{ form.score_global }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Pouvez-vous entrer ? {{ form.can_you_enter }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Vous sentez-vous à l'aise ? {{ form.are_you_safe_enough }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Les vestiaires sont-ils mixtes ? {{ form.is_mixed_lockers }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Pouvez-vous accéder aux vestiaires ? {{ form.is_inclusive_lockers }}</p>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p>Le personnel est-il respectueux ? {{ form.has_respectful_staff }}</p>
+                                </div>
+                              </div>
                               {% if state != "" %}
                                 <p style="color: red">{{ state }}</p>
                               {% endif %}
-                            <input  type="submit" value="Modifier" />
+                            <input  type="submit" value="Valider" />
 
                         </form>
                       {% endif %}

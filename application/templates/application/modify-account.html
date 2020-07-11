@@ -14,15 +14,16 @@
                             {{ form.as_p }}
                             <input type="submit" value="Se connecter" /> -->
                             {% csrf_token %}
-                              {% for field in form %}
-                                <p>
-                                  {{ field.label_tag }}<br>
-                                  {{ field }}
-                                  {% if field.help_text %}
-                                    <small>{{ field.help_text }}</small>
-                                  {% endif %}
-                                </p>
-                              {% endfor %}
+                              <div class="col-12 ">
+                                  <p>Pseudo : {{ form.username }}</p>
+                              </div>
+                              <div class="col-12 text-center">
+                                  <p>Présentation :</p> 
+                                  <p>{{ form.about_me }}</p>
+                              </div>
+                              <div class="col-12 text-center" id="inline-radio-block">
+                                  <p>Genre : {{ form.gender }}</p>
+                              </div>
                               {% if state != "" %}
                                 <p style="color: red">{{ state }}</p>
                               {% endif %}

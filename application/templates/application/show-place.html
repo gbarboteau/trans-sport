@@ -21,17 +21,16 @@
             <h4>{{ this_place.contact_phone }}</h4>
             
         </div>
-        <div class="col-md-6 col-12 more-padding-top more-padding-bottom">
+        <div class="col-md-1 col-0"></div>
+        <div class="col-md-5 col-12 more-padding-top more-padding-bottom">
             <h2>Note globale : {{ this_place.note_global }}/5</h2>
-            <h4>Note moyennes : 
-                <ul>
-                    <li>Les personnes trans peuvent entrer : {{ this_place.note_can_you_enter }}/5</li>
-                    <li>Vous y sentez-vous en sécurité : {{ this_place.note_are_you_safe_enough }}/5</li>
-                    <li>Y a-t-il des vestiaires mixtes : {{ this_place.note_is_mixed_lockers }}/5</li>
-                    <li>Les vestiaires sont-ils accessibles aux personnes trans : {{ this_place.note_is_inclusive_lockers }}/5</li>
-                    <li>Le personnel est formé et respectueux : {{ this_place.note_has_respectful_staff }}/5</li>
-                </ul>
-            </h4>
+            <h4>Note moyennes : </h4>
+                <p class="text-left">Les personnes trans peuvent entrer : {{ this_place.note_can_you_enter }}/5</p>
+                <p class="text-left">Vous y sentez-vous en sécurité : {{ this_place.note_are_you_safe_enough }}/5</p>
+                <p class="text-left">Y a-t-il des vestiaires mixtes : {{ this_place.note_is_mixed_lockers }}/5</p>
+                <p class="text-left">Les vestiaires sont-ils accessibles aux personnes trans : {{ this_place.note_is_inclusive_lockers }}/5</p>
+                <p class="text-left">Le personnel est formé et respectueux : {{ this_place.note_has_respectful_staff }}/5</p>
+            
         </div>
         <div class="col-12 more-padding-top more-padding-bottom" id="map">{{ coordinates }}, {{ coordinates }}</div>
         <script type='text/javascript'>

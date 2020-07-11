@@ -14,15 +14,28 @@
                             {{ form.as_p }}
                             <input type="submit" value="Se connecter" /> -->
                             {% csrf_token %}
-                              {% for field in form %}
-                                <p>
-                                  {{ field.label_tag }}<br>
-                                  {{ field }}
-                                  {% if field.help_text %}
-                                    <small>{{ field.help_text }}</small>
-                                  {% endif %}
-                                </p>
-                              {% endfor %}
+                              <div class="col-12 ">
+                                  <p>Commentaire : </p>
+                                  <p>{{ form.comment }}</p>
+                              </div>
+                              <div class="col-12 text-center">
+                                  <p>Evaluation : {{ form.score_global }}</p>
+                              </div>
+                              <div class="col-12 text-center">
+                                  <p>Pouvez-vous entrer ? {{ form.can_you_enter }}</p>
+                              </div>
+                              <div class="col-12 text-center">
+                                  <p>Vous sentez-vous à l'aise ? {{ form.are_you_safe_enough }}</p>
+                              </div>
+                              <div class="col-12 text-center">
+                                  <p>Les vestiaires sont-ils mixtes ? {{ form.is_mixed_lockers }}</p>
+                              </div>
+                              <div class="col-12 text-center">
+                                  <p>Pouvez-vous accéder aux vestiaires ? {{ form.is_inclusive_lockers }}</p>
+                              </div>
+                              <div class="col-12 text-center">
+                                  <p>Le personnel est-il respectueux ? {{ form.has_respectful_staff }}</p>
+                              </div>
                               {% if state != "" %}
                                 <p style="color: red">{{ state }}</p>
                               {% endif %}

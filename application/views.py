@@ -301,7 +301,7 @@ def make_comment(request, place_id):
                 is_added = False
             context = {'user': my_user, 'form': form, 'errors': form.errors, 'is_added': is_added}
             # return HttpResponse(template.render(context, request=request))
-            return HttpResponse(template.render(context, request=request))
+            return redirect(reverse('show_place', args=[place_id]))
         else:
             print(form.errors)
     else:
