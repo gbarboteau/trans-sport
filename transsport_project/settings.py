@@ -26,11 +26,11 @@ GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get('ENV') == 'PRODUCTION':
-    DEBUG = False
+    DEBUG = True
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = [] #'.herokuapp.com', 'trans-sport.herokuapp.com', '127.0.0.1'
+ALLOWED_HOSTS = ['.herokuapp.com', 'trans-sport.herokuapp.com', '127.0.0.1']
 
 
 
