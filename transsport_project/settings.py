@@ -30,7 +30,7 @@ if os.environ.get('ENV') == 'PRODUCTION':
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'trans-sport.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['.herokuapp.com', 'trans-sport.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 
@@ -149,7 +149,7 @@ STATICFILES_DIRS = [
 if os.environ.get('ENV') == 'PRODUCTION':
 
     # Static files settings
-    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
