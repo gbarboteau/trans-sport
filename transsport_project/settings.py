@@ -89,7 +89,7 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '',
         'PORT': '5432',
-
+    }
 }
 
 AUTH_USER_MODEL = 'application.User'
