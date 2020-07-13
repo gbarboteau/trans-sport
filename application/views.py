@@ -111,7 +111,7 @@ class create_account(View):
             user.save()
 
             current_site = get_current_site(request)
-            subject = 'Activate Your MySite Account'
+            subject = 'Activez votre compte Trans-sport'
             message = render_to_string('application/registration/account_activation_email.html', {
                 'user': user,
                 'domain': current_site.domain,

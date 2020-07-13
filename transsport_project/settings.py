@@ -26,7 +26,7 @@ GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get('ENV') == 'PRODUCTION':
-    DEBUG = True
+    DEBUG = False
 else:
     DEBUG = True
 
@@ -62,7 +62,7 @@ ROOT_URLCONF = 'transsport_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,7 +139,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # STATIC_TMP = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
@@ -152,7 +152,7 @@ if os.environ.get('ENV') == 'PRODUCTION':
     # Static files settings
     PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+    # STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
     # Extra places for collectstatic to find static files.
     STATICFILES_DIRS = (
