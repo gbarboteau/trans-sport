@@ -1,30 +1,30 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.template import loader
-from .models import User, Category, Adress, Place, Comment
-from .forms import SignUpForm, ConnexionForm, UpdateProfile, PlaceSubmissionForm, CommentForm, SearchForm
-from .utils import GetCityDepartementAndRegion, GetZipCodeFromDepartment, DoesKeyExists, GetNote, GetCoordinates
+from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
 from django.urls import reverse_lazy, reverse
 from django.views.generic import View, UpdateView
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
-from django.utils.encoding import force_text
-from .tokens import account_activation_token
-import random
-from django.contrib import messages
 from django.conf import settings
+
+from .models import User, Category, Adress, Place, Comment
+from .forms import SignUpForm, ConnexionForm, UpdateProfile, PlaceSubmissionForm, CommentForm, SearchForm
+from .utils import GetCityDepartementAndRegion, GetZipCodeFromDepartment, DoesKeyExists, GetNote, GetCoordinates
+from .tokens import account_activation_token
+
+import random
 
 User = get_user_model()
 
 def index(request):
+    """Displays the index view"""
     all_places = Place.objects.filter(can_be_seen=True)
     random_places = random.sample(list(all_places), 2)
     template = loader.get_template('application/index.html')
@@ -66,6 +66,7 @@ def logout_view(request):
 
 @login_required
 def account(request):
+    """Shows the user a page with its informations"""
     my_user = request.user
     template = loader.get_template('application/account.html')
     context = {'user': my_user}
@@ -73,6 +74,7 @@ def account(request):
 
 @login_required
 def modify_account(request):
+    """Let a user modify its account informations"""
     my_user = request.user
     template = loader.get_template('application/modify-account.html')
     context = {'user': my_user}
@@ -92,6 +94,7 @@ def modify_account(request):
 
 
 class create_account(View):
+    """Let a user create an account"""
     form_class = SignUpForm
     template = 'application/create-account.html'
 
@@ -103,7 +106,6 @@ class create_account(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            print("form valide")
             user = form.save(commit=False)
             user.is_active = False # Deactivate account till it is confirmed
             user.save()
@@ -116,26 +118,24 @@ class create_account(View):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            # print("uid : " + str(message.uid) + "\n token : " + str(message.token))
             user.email_user(subject, message)
             context = {}
             messages.success(request, 'Veuillez confirmer votre adresse email pour terminer le processus de création de compte')
-            
             return render(request, self.template, context)
-            # return redirect('index')
-
-        return render(request, self.template, {'form': form})
+        else:
+            return render(request, self.template, {'form': form})
 
 
 class ActivateAccount(View):
-
+    """Let a user activate its account after clicking
+    a link (contained in an email)
+    """
     def get(self, request, uidb64, token, *args, **kwargs):
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
-
         if user is not None and account_activation_token.check_token(user, token):
             user.is_active = True
             user.profile.email_confirmed = True
@@ -150,6 +150,9 @@ class ActivateAccount(View):
 
 @login_required
 def suggesting_new_place(request):
+    """Show the page allowing a user to suggest
+    a new place
+    """
     my_user = request.user
     template = loader.get_template('application/suggesting-new-place.html')
     context = {'user': my_user}
@@ -167,14 +170,12 @@ def suggesting_new_place(request):
                 """Creating a new comment"""
                 new_comment = Comment(comment=form.data['comment'], score_global=form.data['score_global'], can_you_enter=DoesKeyExists('can_you_enter', form.data), are_you_safe_enough=DoesKeyExists('are_you_safe_enough', form.data), is_mixed_lockers=DoesKeyExists('is_mixed_lockers', form.data), is_inclusive_lockers=DoesKeyExists('is_inclusive_lockers', form.data), has_respectful_staff=DoesKeyExists('has_respectful_staff', form.data), place_id=new_place.id, user_id=my_user.id)
                 new_comment.save()
-
                 is_added = True
             except IntegrityError as error:
                 is_added = False
             context = {'user': my_user, 'form': form, 'errors': form.errors}
             messages.success(request, 'Form submission successful')
             return HttpResponse(template.render(context,request=request))
-
         else:
             print(form.errors)
     else:
@@ -183,15 +184,12 @@ def suggesting_new_place(request):
         return HttpResponse(template.render(context,request=request))
 
 def search_places(request):
+    """Let a user search for specific places"""
     my_query = ""
-    # queryNum = 0
     if 'query' in request.GET: #if the navbar form is filled
         my_query = request.GET.get('query')
-        # queryNum = 1
     elif 'query_index' in request.GET: #if the index page form is filled
         my_query = request.GET.get('query_index')
-        # queryNum = 2
-    # my_query = request.GET.get('query')
     page = request.GET.get('page')
     queryset = Place.objects.filter(name__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__street_adress__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__region__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__departement__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__postal_code__icontains=my_query, can_be_seen=True) | Place.objects.filter(adress__city__icontains=my_query, can_be_seen=True)
     paginator = Paginator(queryset, 9)
@@ -209,12 +207,16 @@ def search_places(request):
 
 
 def all_places(request):
+    """Shows all places in the database"""
     places = Place.objects.all()
     context = {'places': places}
     template = loader.get_template('application/all-places.html')
     return HttpResponse(template.render(context, request=request))
 
 def all_departments(request):
+    """Shows all departments with at least one
+    place registered in the database
+    """
     departments = Place.objects.filter(can_be_seen=True).values('adress__departement').distinct()
     departments_with_zip_code = []
     for department in departments:
@@ -224,12 +226,14 @@ def all_departments(request):
     return HttpResponse(template.render(context, request=request))
 
 def places_by_departments(request, postal_code):
+    """Show all the places of a given department"""
     places = Place.objects.filter(can_be_seen=True, adress__postal_code__startswith=postal_code)
     context = {'places': places, 'postal_code': postal_code}
     template = loader.get_template('application/places-by-departments.html')
     return HttpResponse(template.render(context, request=request))
 
 def show_place(request, place_id):
+    """Show a place page"""
     this_place = get_object_or_404(Place, pk=place_id, can_be_seen=True)
     its_comments = Comment.objects.filter(place_id=this_place.id)
     this_place.note_global = GetNote(its_comments.filter(score_global='P').count(), its_comments.filter(score_global='N').count())
@@ -249,6 +253,7 @@ def show_place(request, place_id):
 
 @login_required
 def edit_comment(request, place_id):
+    """Allows a user to edit a previous comment"""
     my_user = request.user
     edited_comment = get_object_or_404(Comment, place_id=place_id, user_id=my_user.id)
     template = loader.get_template('application/edit-comment.html')
@@ -286,6 +291,7 @@ def edit_comment(request, place_id):
 
 @login_required
 def make_comment(request, place_id):
+    """Allows a user to post a comment"""
     my_user = request.user
     template = loader.get_template('application/make-comment.html')
     context = {'user': my_user}

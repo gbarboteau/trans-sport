@@ -10,9 +10,6 @@
                     <div class="mt-5" >
                         <h2 class="h4 mb-2 text-dark">Modifier vos informations</h2>
                         <form method="post" class="text-dark">
-                            <!-- {% csrf_token %}
-                            {{ form.as_p }}
-                            <input type="submit" value="Se connecter" /> -->
                             {% csrf_token %}
                               <div class="col-12 ">
                                   <p>Pseudo : {{ form.username }}</p>

@@ -21,12 +21,14 @@ class ModelsTestCase(TestCase):
         self.assertIs(test_category.name, "Kebabs")
 
     def test_adress_object(self):
+        """Test of the adress model"""
         test_postal_code = '83720'
         test_values = GetCityDepartementAndRegion(test_postal_code)
         test_adress = Adress.objects.create(region=test_values[2], departement=test_values[1], postal_code=test_postal_code, city=test_values[0], street_adress='20 rue Kirby54')
         self.assertIs(test_adress.street_adress, '20 rue Kirby54')
 
     def test_place_object(self):
+        """Test of the place model"""
         test_postal_code = '83720'
         test_values = GetCityDepartementAndRegion(test_postal_code)
         test_adress = Adress.objects.create(region=test_values[2], departement=test_values[1], postal_code=test_postal_code, city=test_values[0], street_adress='20 rue Kirby54')
@@ -35,6 +37,7 @@ class ModelsTestCase(TestCase):
         self.assertIs(test_place.name, 'Bar à Chicha de Knuckles')
 
     def test_comment_object(self):
+        """Test of the comment model"""
         test_user = User.objects.create(username="Yoshi69", email="petitprincedurai@caramail.com", password="VIVETOTOSS", gender='Femme trans', about_me='J\'aime la vie et le zouk')
         test_postal_code = '83720'
         test_values = GetCityDepartementAndRegion(test_postal_code)
@@ -46,26 +49,31 @@ class ModelsTestCase(TestCase):
 
 
 class UtilsTestsCase(TestCase):
-
+    """Tests all of the utils fonction"""
 	def test_getcitydepartmentandregion(self):
+        """Tests the GetCityDepartementAndRegion() function"""
 		test_postal_code = '83720'
 		self.assertSequenceEqual(GetCityDepartementAndRegion(test_postal_code), ['TRANS EN PROVENCE', 'Var', "Provence-Alpes-Côte d'Azur"])
 
 	def test_getzipcodefromdepartement(self):
+        """Tests the GetZipCodeFromDepartment() function"""
 		test_zipcode = 'Var'
 		self.assertDictEqual(GetZipCodeFromDepartment(test_zipcode), {'postal_code': '83', 'department': 'Var'})
 
 	def test_doeskeyexists_true(self):
+        """Tests the DoesKeyExists() function"""
 		test_key = 'name'
 		test_dict = {'age': 16, 'name': 'Miles Prowler', 'job': 'Mecanic'}
 		self.assertIs(DoesKeyExists(test_key, test_dict), True)
 
 	def test_doeskeyexists_false(self):
+        """Tests the DoesKeyExists() function"""
 		test_key = 'pseudo'
 		test_dict = {'age': 16, 'name': 'Miles Prowler', 'job': 'Mecanic'}
 		self.assertIs(DoesKeyExists(test_key, test_dict), False)
 
 	def test_getnote(self):
+        """Tests the GetNote() function"""
 		note = 1.5
 		positive_reviews = 3
 		negative_reviews = 7
@@ -89,6 +97,7 @@ class IndexPageTestCase(TestCase):
         test_place_2.save()
 
     def test_index_page(self):
+        """Tests the access of the index page"""
         test_place_1 = get_object_or_404(Place, name='Bar à Chicha de Knuckles')
         test_place_2 = get_object_or_404(Place, name='Kebab de Robotnik')
         response = self.client.get(reverse('index'))
@@ -138,16 +147,19 @@ class LogoutTestCase(TestCase):
 
 
 class AccountTestCase(TestCase):
+    """Tests of the account view"""
     def setUp(self):
         user = User.objects.create(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA", gender='Femme trans', is_active=True)
         user.save()
 
     def test_account_logged_in(self):
+    """Checks if the user is logged in"""
         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
         response = self.client.get(reverse('account'))
         self.assertEqual(response.status_code, 200)
 
     def test_account_logged_in(self):
+    """Checks if the user is not logged in"""
         response = self.client.get(reverse('account'))
         self.assertEqual(response.status_code, 302)
 
@@ -166,38 +178,42 @@ class CreateAccountTestCase(TestCase):
 
 
 class ModifyAccountTestCase(TestCase):
+    """Tests of the modify-account view"""
     def setUp(self):
         user = User.objects.create(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA", gender='Femme trans', is_active=True)
         user.save()
 
-    """Tests of the create-account view"""
     def test_modify_account_page(self):
-        """Checks if the page is accessible"""
+    """Checks if the user is logged in"""
         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
         response = self.client.get(reverse('modify_account'))
         self.assertEqual(response.status_code, 302)
 
     def test_modify_account_page_not_logged_in(self):
-        """Checks if the page is accessible"""
+    """Checks if the user is not logged in"""
         response = self.client.get(reverse('modify_account'))
         self.assertEqual(response.status_code, 302)
 
 
 class SuggestingNewPlaceTestCase(TestCase):
+    """Tests of the suggesting-new-place view"""
     def setUp(self):
         test_user = User.objects.create(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA", gender='Femme trans', is_active=True)
         test_user.save()
 
     def test_access_page_logged_in(self):
+        """Checks if the user is logged in"""
         self.client.login(username="Kirby54", password="FANDECYRILHANOUNA")
         response = self.client.get('/suggesting-new-place/')
         self.assertEqual(response.status_code, 302)
 
     def test_access_page_not_logged_in(self):
+        """Checks if the user is not logged in"""
         response = self.client.get('/suggesting-new-place/')
         self.assertEqual(response.status_code, 302)
 
     def test_suggest_new_place(self):
+        """Checks if you can add a place"""
         self.client.login(username="Kirby54", password="FANDECYRILHANOUNA")
         test_category = Category.objects.create(name='Kebabs', icon='https://img.huffingtonpost.com/asset/5e690c9c230000841839f17d.jpeg?cache=m6hnJ2la6O&ops=1778_1000')
         # test_comment = Comment.objects.get(comment="très bon", score_global='P', can_you_enter=True, are_you_safe_enough=True, is_mixed_lockers=False, is_inclusive_lockers=False, has_respectful_staff=False)
@@ -205,6 +221,7 @@ class SuggestingNewPlaceTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_suggest_new_place_error(self):
+        """Checks if an empty form does not add a place"""
         test_category = Category.objects.create(name='Kebabs', icon='https://img.huffingtonpost.com/asset/5e690c9c230000841839f17d.jpeg?cache=m6hnJ2la6O&ops=1778_1000')
         # test_comment = Comment.objects.get(comment="très bon", score_global='P', can_you_enter=True, are_you_safe_enough=True, is_mixed_lockers=False, is_inclusive_lockers=False, has_respectful_staff=False)
         response = self.client.get('/suggesting-new-place/', {'name': 'Bar à Chicha de Knuckles', 'picture': 'https://img.huffingtonpost.com/asset/5e690c9c230000841839f17d.jpeg?cache=m6hnJ2la6O&ops=1778_1000', 'description': 'Un lieu convivial pour toute la famille !', 'category': test_category.id, 'website': 'perdu.com', 'contact_mail': 'salam@haleykoum.com', 'contact_phone': '0666666666', 'street_adress': '978 route de Draguignan', 'postal_code': '83720', 'comment': 'J\'ai apprécié', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
@@ -234,6 +251,7 @@ class SearchPlacesTestCase(TestCase):
 
 
 class AllPlacesTestCase(TestCase):
+    """Tests of the all-places view"""
     def setUp(self):
         test_postal_code_1 = '83720'
         test_values_1 = GetCityDepartementAndRegion(test_postal_code_1)
@@ -249,6 +267,7 @@ class AllPlacesTestCase(TestCase):
         test_place_2.save()
 
     def test_places_page(self):
+        """Checks if the page is accessible"""
         test_place_1 = get_object_or_404(Place, name='Bar à Chicha de Knuckles')
         test_place_2 = get_object_or_404(Place, name='Kebab de Robotnik')
         response = self.client.get(reverse('all_places'))
@@ -256,6 +275,7 @@ class AllPlacesTestCase(TestCase):
 
 
 class AllDepartmentsTestCase(TestCase):
+    """Tests of the all-departments view"""
     def setUp(self):
         test_postal_code_1 = '83720'
         test_values_1 = GetCityDepartementAndRegion(test_postal_code_1)
@@ -271,6 +291,7 @@ class AllDepartmentsTestCase(TestCase):
         test_place_2.save()
 
     def test_places_page(self):
+        """Checks if the page is accessible"""
         departments = Place.objects.filter(can_be_seen=True).values('adress__departement').distinct()
         departments_with_zip_code = []
         for department in departments:
@@ -280,6 +301,7 @@ class AllDepartmentsTestCase(TestCase):
 
 
 class PlacesByDepartmentTestCase(TestCase):
+    """Tests of the places-by-departments view"""
     def setUp(self):
         test_postal_code_1 = '83720'
         test_values_1 = GetCityDepartementAndRegion(test_postal_code_1)
@@ -295,6 +317,7 @@ class PlacesByDepartmentTestCase(TestCase):
         test_place_2.save()
 
     def test_places_page(self):
+        """Checks if the page is accessible"""
         test_place_1 = get_object_or_404(Place, name='Bar à Chicha de Knuckles')
         test_place_2 = get_object_or_404(Place, name='Kebab de Robotnik')
         response = self.client.get('/all-departments/' + str(83) + '/')
@@ -302,6 +325,7 @@ class PlacesByDepartmentTestCase(TestCase):
 
 
 class ShowPlaceTestCase(TestCase):
+    """Tests of the show-place view"""
     def setUp(self):
         test_user = User.objects.create(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA", gender='Femme trans', is_active=True)
         test_user.save()
@@ -322,20 +346,22 @@ class ShowPlaceTestCase(TestCase):
         test_place.save()
 
     def test_show_place(self):
+        """Checks if the page is accessible"""
         test_place = Place.objects.get(name='Bar à Chicha de Knuckles')
         response = self.client.get('/all-places/' + str(test_place.id) + '/')
         self.assertEqual(response.status_code, 200)
 
     def test_show_wrong_place(self):
+        """Checks if a non-existent page is 
+        not accessible
+        """
         test_place = Place.objects.get(name='Bar à Chicha de Knuckles')
         response = self.client.get('/all-places/' + str(test_place.id + 1) + '/')
         self.assertEqual(response.status_code, 404)
 
 
-
-
-
 class MakeCommentDepartmentTestCase(TestCase):
+    """Tests of the make-comment view"""
     def setUp(self):
         test_user = User.objects.create(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA", gender='Femme trans', is_active=True)
         test_user.save()
@@ -358,6 +384,7 @@ class MakeCommentDepartmentTestCase(TestCase):
         test_place.save()
 
     def test_make_comment(self):
+        """Tests if a logged in user can post a comment"""
         self.client.login(username="Kirby54", password="FANDECYRILHANOUNA")
         test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
         response = self.client.get('/all-places/' + str(test_place[0].id) + '/make-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
@@ -365,18 +392,23 @@ class MakeCommentDepartmentTestCase(TestCase):
 
 
     def test_make_existing_comment(self):
+        """Tests if a logged in user cannot post a comment
+        while one already exists
+        """
         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
         test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
         response = self.client.get('/all-places/' + str(test_place[0].id +1) + '/make-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)
 
     def test_make_comment_while_not_logged_in(self):
+        """Tests if a not logged in user cannot post a comment"""
         test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
         response = self.client.get('/all-places/' + str(test_place[0].id) + '/make-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)
 
 
 class EditCommentDepartmentTestCase(TestCase):
+    """Tests of the edit-comment view"""
     def setUp(self):
         test_user = User.objects.create(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA", gender='Femme trans', is_active=True)
         test_user.save()
@@ -399,6 +431,9 @@ class EditCommentDepartmentTestCase(TestCase):
         test_place.save()
 
     def test_edit_comment(self):
+        """Tests if a logged in user can edit an existing 
+        comment
+        """
         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
         test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
         test_comment = Comment.objects.get(comment="j'adore", score_global='P', can_you_enter=True, are_you_safe_enough=True, is_mixed_lockers=False, is_inclusive_lockers=False, has_respectful_staff=False)
@@ -408,14 +443,16 @@ class EditCommentDepartmentTestCase(TestCase):
 
 
     def test_edit_nonexisting_comment(self):
+        """Tests if a logged in user cannot edit a 
+        non-existing comment
+        """
         self.client.login(username="Kirby54", password="FANDECYRILHANOUNA")
         test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
         response = self.client.get('/all-places/' + str(test_place[0].id +1) + '/edit-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)
 
     def test_edit_comment_while_not_logged_in(self):
-        # test_place = get_object_or_404(Place, name='Bar à Chicha de Knuckles')
-        test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
+        """Tests if a not logged in user cannot edit a comment"""
         # response = self.client.get(reverse('edit_comment', args=[test_place.id]), {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         response = self.client.get('/all-places/' + str(test_place[0].id) + '/edit-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)

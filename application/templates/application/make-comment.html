@@ -4,15 +4,11 @@
         {% block content %}
         {% load static %}
         <div class="container container-listing align-items-center justify-content-center text-center more-padding-top more-padding-bottom">
-            <!-- Masthead-->
             <div class="row h-100 d-flex align-items-center justify-content-center text-center">
                 <div class="col-lg-6 text-center">
                     <div class="mt-5" >
                         <h2 class="h4 mb-2 text-dark">Poster un commentaire</h2>
                         <form method="post" class="text-dark">
-                            <!-- {% csrf_token %}
-                            {{ form.as_p }}
-                            <input type="submit" value="Se connecter" /> -->
                             {% csrf_token %}
                             <div class="col-12 ">
                                 <p>Commentaire : </p>

@@ -16,14 +16,10 @@
         </header>
 
         <div class="container" id="my-page-content">
-            <!-- <h2 class="text-center mt-0">Colette et Remy</h2>
-            <hr class="divider my-4" /> -->
             <div class="row more-padding-top">
-
                 <div class="text-center col-12 align-items-center">
                   <h2>Votre email est: {{ user.email }}</h2>
                 </div>
-
             </div>
         </div>
 
@@ -32,15 +28,12 @@
 
             <div class="container container-listing align-items-center justify-content-center text-center more-padding-top more-padding-bottom">
                 <div class="row h-100 d-flex align-items-center justify-content-center text-center">
-                    
                     {% if messages %}
                         <div class="col-lg-6 text-center">
                             <div class="mt-5" class="text-dark font-weight-light mb-5">
-                                
                                   {% for message in messages %}
                                   <h2 class="h4 mb-2 text-dark{% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }}</h2>
                                   {% endfor %}
-
                             </div>
                         </div>
                     {% else %}
@@ -48,41 +41,29 @@
                             <h2 class="h4 mb-2 text-dark">Créez un compte</h2>
                         </div>
 
-                      <form method="post" class="text-dark">
-                        {% csrf_token %}
-                        <div class="col-12 ">
-                            <p>Pseudo : {{ form.username }}</p>
-                        </div>
-                        <div class="col-12 text-center">
-                            <p>Adresse mail : {{ form.email }}</p>
-                        </div>
-                        <div class="col-12 text-center">
-                            <p>Présentation :</p> 
-                            <p>{{ form.about_me }}</p>
-                        </div>
-                        <div class="col-12 text-center" id="inline-radio-block">
-                            <p>Genre : {{ form.gender }}</p>
-                        </div>
-                        <div class="col-12 text-center">
-                            <p>Mot de passe : {{ form.password1 }}</p>
-                        </div>
-                        <div class="col-12 text-center">
-                            <p>Confirmez votre mot de passe : {{ form.password2 }}</p>
-                        </div>
-                        <!-- {% for field in form %}
-                          <p>
-                            {{ field.label_tag }}<br>
-                            {{ field }}
-                            {% if field.help_text %}
-                              <small>{{ field.help_text }}</small>
-                            {% endif %}
-                            {% for error in field.errors %}
-                              <p style="color: red">{{ error }}</p>
-                            {% endfor %}
-                          </p>
-                        {% endfor %} -->
-                        <button type="submit">Confirmer</button>
-                      </form>
+                        <form method="post" class="text-dark">
+                          {% csrf_token %}
+                          <div class="col-12 ">
+                              <p>Pseudo : {{ form.username }}</p>
+                          </div>
+                          <div class="col-12 text-center">
+                              <p>Adresse mail : {{ form.email }}</p>
+                          </div>
+                          <div class="col-12 text-center">
+                              <p>Présentation :</p> 
+                              <p>{{ form.about_me }}</p>
+                          </div>
+                          <div class="col-12 text-center" id="inline-radio-block">
+                              <p>Genre : {{ form.gender }}</p>
+                          </div>
+                          <div class="col-12 text-center">
+                              <p>Mot de passe : {{ form.password1 }}</p>
+                          </div>
+                          <div class="col-12 text-center">
+                              <p>Confirmez votre mot de passe : {{ form.password2 }}</p>
+                          </div>
+                          <button type="submit">Confirmer</button>
+                        </form>
 
 
 
