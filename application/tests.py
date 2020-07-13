@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse, reverse_lazy
+from .admin import UserAdmin, CategoryAdmin, PlaceAdmin, CommentAdmin, AdressAdmin
 from .models import User, Category, Adress, Place, Comment
 from .utils import GetCityDepartementAndRegion, GetZipCodeFromDepartment, DoesKeyExists, GetNote
 from django.core import mail
@@ -103,7 +104,6 @@ class UserCreationTestCase(TestCase):
     def test_account_creation(self):
         """Checks if users can create an account"""
         response = self.client.post(reverse('create_account'), {'username':"Yoshi54", 'email':"yoshi54@caramail.com", 'password1':"FANDECYRILHANOUNA", 'password2':"FANDECYRILHANOUNA", 'gender': 'Femme trans'})
-        # redirect_response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
 
@@ -165,12 +165,22 @@ class CreateAccountTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-# class ModifyAccountTestCase(TestCase):
-#     pass
+class ModifyAccountTestCase(TestCase):
+    def setUp(self):
+        user = User.objects.create(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA", gender='Femme trans', is_active=True)
+        user.save()
 
+    """Tests of the create-account view"""
+    def test_modify_account_page(self):
+        """Checks if the page is accessible"""
+        self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
+        response = self.client.get(reverse('modify_account'))
+        self.assertEqual(response.status_code, 302)
 
-# class ActivateAccountTestCase(TestCase):
-#     pass
+    def test_modify_account_page_not_logged_in(self):
+        """Checks if the page is accessible"""
+        response = self.client.get(reverse('modify_account'))
+        self.assertEqual(response.status_code, 302)
 
 
 class SuggestingNewPlaceTestCase(TestCase):
@@ -178,9 +188,14 @@ class SuggestingNewPlaceTestCase(TestCase):
         test_user = User.objects.create(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA", gender='Femme trans', is_active=True)
         test_user.save()
 
+    def test_access_page_logged_in(self):
+        self.client.login(username="Kirby54", password="FANDECYRILHANOUNA")
+        response = self.client.get('/suggesting-new-place/')
+        self.assertEqual(response.status_code, 302)
+
     def test_access_page_not_logged_in(self):
         response = self.client.get('/suggesting-new-place/')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
 
     def test_suggest_new_place(self):
         self.client.login(username="Kirby54", password="FANDECYRILHANOUNA")
@@ -194,61 +209,6 @@ class SuggestingNewPlaceTestCase(TestCase):
         # test_comment = Comment.objects.get(comment="très bon", score_global='P', can_you_enter=True, are_you_safe_enough=True, is_mixed_lockers=False, is_inclusive_lockers=False, has_respectful_staff=False)
         response = self.client.get('/suggesting-new-place/', {'name': 'Bar à Chicha de Knuckles', 'picture': 'https://img.huffingtonpost.com/asset/5e690c9c230000841839f17d.jpeg?cache=m6hnJ2la6O&ops=1778_1000', 'description': 'Un lieu convivial pour toute la famille !', 'category': test_category.id, 'website': 'perdu.com', 'contact_mail': 'salam@haleykoum.com', 'contact_phone': '0666666666', 'street_adress': '978 route de Draguignan', 'postal_code': '83720', 'comment': 'J\'ai apprécié', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)
-
-
-    # def test_make_existing_comment(self):
-    #     self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
-    #     test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
-    #     response = self.client.get('/all-places/' + str(test_place[0].id +1) + '/make-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
-    #     self.assertEqual(response.status_code, 302)
-
-    # def test_make_comment_while_not_logged_in(self):
-    #     # test_place = get_object_or_404(Place, name='Bar à Chicha de Knuckles')
-    #     test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
-    #     # response = self.client.get(reverse('edit_comment', args=[test_place.id]), {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
-    #     response = self.client.get('/all-places/' + str(test_place[0].id) + '/make-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
-    #     self.assertEqual(response.status_code, 302)
-
-
-
-
-
-# def suggesting_new_place(request):
-#     my_user = request.user
-#     template = loader.get_template('application/suggesting-new-place.html')
-#     context = {'user': my_user}
-#     if request.method == 'POST':
-#         form = PlaceSubmissionForm(request.POST)
-#         if form.is_valid():
-#             try:
-#                 """Creating a new adress"""
-#                 my_departement_and_region = GetCityDepartementAndRegion(form.data['postal_code'])
-#                 new_adress = Adress(postal_code=form.data['postal_code'], street_adress=form.data['street_adress'], departement=my_departement_and_region[1], region=my_departement_and_region[2], city=my_departement_and_region[0]) 
-#                 new_adress.save()
-#                 """Creating a new place"""
-#                 new_place = Place(name=form.data['name'], picture=form.data['picture'], description=form.data['description'], website=form.data['website'], contact_mail=form.data['contact_mail'], contact_phone=form.data['contact_phone'], can_be_seen=False, adress_id=new_adress.id, category_id=form.data['category'])
-#                 new_place.save()
-#                 """Creating a new comment"""
-#                 new_comment = Comment(comment=form.data['comment'], score_global=form.data['score_global'], can_you_enter=DoesKeyExists('can_you_enter', form.data), are_you_safe_enough=DoesKeyExists('are_you_safe_enough', form.data), is_mixed_lockers=DoesKeyExists('is_mixed_lockers', form.data), is_inclusive_lockers=DoesKeyExists('is_inclusive_lockers', form.data), has_respectful_staff=DoesKeyExists('has_respectful_staff', form.data), place_id=new_place.id, user_id=my_user.id)
-#                 new_comment.save()
-
-#                 is_added = True
-#             except IntegrityError as error:
-#                 is_added = False
-#             context = {'user': my_user, 'form': form, 'errors': form.errors}
-#             messages.success(request, 'Form submission successful')
-#             return HttpResponse(template.render(context,request=request))
-
-#         else:
-#             print(form.errors)
-#     else:
-#         form = PlaceSubmissionForm()
-#         context = {'user': my_user, 'form': form, 'errors': form.errors}
-#         return HttpResponse(template.render(context,request=request))
-
-
-
-
 
 
 class SearchPlacesTestCase(TestCase):
@@ -271,16 +231,6 @@ class SearchPlacesTestCase(TestCase):
         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
         response = self.client.get(reverse('search'))
         self.assertEqual(response.status_code, 200)
-
-
-
-
-
-
-
-
-
-
 
 
 class AllPlacesTestCase(TestCase):
@@ -363,12 +313,12 @@ class ShowPlaceTestCase(TestCase):
         test_place.save()
         test_comment = Comment.objects.create(comment="j'adore", score_global='P', can_you_enter=True, are_you_safe_enough=True, is_mixed_lockers=False, is_inclusive_lockers=False, has_respectful_staff=False, place_id=test_place.id, user_id=test_user.id)
         test_comment.save()
-        test_place.note_global = 4 #GetNote(test_comment.filter(score_global='P').count(), test_comment.filter(score_global='N').count())
-        test_place.note_can_you_enter = 3 #GetNote(test_comment.filter(can_you_enter=True).count(), test_comment.filter(can_you_enter =False).count())
-        test_place.note_are_you_safe_enough = 3 #GetNote(test_comment.filter(are_you_safe_enough=True).count(), test_comment.filter(are_you_safe_enough =False).count())
-        test_place.note_is_mixed_lockers = 3 #GetNote(test_comment.filter(is_mixed_lockers=True).count(), test_comment.filter(is_mixed_lockers =False).count())
-        test_place.note_is_inclusive_lockers = 3 #GetNote(test_comment.filter(is_inclusive_lockers=True).count(), test_comment.filter(is_inclusive_lockers =False).count())
-        test_place.note_has_respectful_staff = 3 # GetNote(test_comment.filter(has_respectful_staff=True).count(), test_comment.filter(has_respectful_staff =False).count())
+        test_place.note_global = 4 
+        test_place.note_can_you_enter = 3 
+        test_place.note_are_you_safe_enough = 3 
+        test_place.note_is_mixed_lockers = 3 
+        test_place.note_is_inclusive_lockers = 3
+        test_place.note_has_respectful_staff = 3 
         test_place.save()
 
     def test_show_place(self):
@@ -399,18 +349,17 @@ class MakeCommentDepartmentTestCase(TestCase):
         test_place.save()
         test_comment = Comment.objects.create(comment="j'adore", score_global='P', can_you_enter=True, are_you_safe_enough=True, is_mixed_lockers=False, is_inclusive_lockers=False, has_respectful_staff=False, place_id=test_place.id, user_id=test_user.id)
         test_comment.save()
-        test_place.note_global = 4 #GetNote(test_comment.filter(score_global='P').count(), test_comment.filter(score_global='N').count())
-        test_place.note_can_you_enter = 3 #GetNote(test_comment.filter(can_you_enter=True).count(), test_comment.filter(can_you_enter =False).count())
-        test_place.note_are_you_safe_enough = 3 #GetNote(test_comment.filter(are_you_safe_enough=True).count(), test_comment.filter(are_you_safe_enough =False).count())
-        test_place.note_is_mixed_lockers = 3 #GetNote(test_comment.filter(is_mixed_lockers=True).count(), test_comment.filter(is_mixed_lockers =False).count())
-        test_place.note_is_inclusive_lockers = 3 #GetNote(test_comment.filter(is_inclusive_lockers=True).count(), test_comment.filter(is_inclusive_lockers =False).count())
-        test_place.note_has_respectful_staff = 3 # GetNote(test_comment.filter(has_respectful_staff=True).count(), test_comment.filter(has_respectful_staff =False).count())
+        test_place.note_global = 4 
+        test_place.note_can_you_enter = 3 
+        test_place.note_are_you_safe_enough = 3 
+        test_place.note_is_mixed_lockers = 3 
+        test_place.note_is_inclusive_lockers = 3
+        test_place.note_has_respectful_staff = 3
         test_place.save()
 
     def test_make_comment(self):
         self.client.login(username="Kirby54", password="FANDECYRILHANOUNA")
         test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
-        # test_comment = Comment.objects.get(comment="très bon", score_global='P', can_you_enter=True, are_you_safe_enough=True, is_mixed_lockers=False, is_inclusive_lockers=False, has_respectful_staff=False)
         response = self.client.get('/all-places/' + str(test_place[0].id) + '/make-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)
 
@@ -422,9 +371,7 @@ class MakeCommentDepartmentTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_make_comment_while_not_logged_in(self):
-        # test_place = get_object_or_404(Place, name='Bar à Chicha de Knuckles')
         test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
-        # response = self.client.get(reverse('edit_comment', args=[test_place.id]), {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         response = self.client.get('/all-places/' + str(test_place[0].id) + '/make-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)
 
@@ -443,12 +390,12 @@ class EditCommentDepartmentTestCase(TestCase):
         test_place.save()
         test_comment = Comment.objects.create(comment="j'adore", score_global='P', can_you_enter=True, are_you_safe_enough=True, is_mixed_lockers=False, is_inclusive_lockers=False, has_respectful_staff=False, place_id=test_place.id, user_id=test_user.id)
         test_comment.save()
-        test_place.note_global = 4 #GetNote(test_comment.filter(score_global='P').count(), test_comment.filter(score_global='N').count())
-        test_place.note_can_you_enter = 3 #GetNote(test_comment.filter(can_you_enter=True).count(), test_comment.filter(can_you_enter =False).count())
-        test_place.note_are_you_safe_enough = 3 #GetNote(test_comment.filter(are_you_safe_enough=True).count(), test_comment.filter(are_you_safe_enough =False).count())
-        test_place.note_is_mixed_lockers = 3 #GetNote(test_comment.filter(is_mixed_lockers=True).count(), test_comment.filter(is_mixed_lockers =False).count())
-        test_place.note_is_inclusive_lockers = 3 #GetNote(test_comment.filter(is_inclusive_lockers=True).count(), test_comment.filter(is_inclusive_lockers =False).count())
-        test_place.note_has_respectful_staff = 3 # GetNote(test_comment.filter(has_respectful_staff=True).count(), test_comment.filter(has_respectful_staff =False).count())
+        test_place.note_global = 4 
+        test_place.note_can_you_enter = 3 
+        test_place.note_are_you_safe_enough = 3
+        test_place.note_is_mixed_lockers = 3
+        test_place.note_is_inclusive_lockers = 3 
+        test_place.note_has_respectful_staff = 3 
         test_place.save()
 
     def test_edit_comment(self):
@@ -472,161 +419,3 @@ class EditCommentDepartmentTestCase(TestCase):
         # response = self.client.get(reverse('edit_comment', args=[test_place.id]), {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         response = self.client.get('/all-places/' + str(test_place[0].id) + '/edit-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)
-
-
-
-
-# class AlimentTestCase(TestCase):
-
-#     def setUp(self):
-#         """Setting up the tests"""
-#         user = User.objects.create_user(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA")
-#         user.save()
-#         aliment = Aliment.objects.create(name="Chou Rouge")
-#         aliment.save()
-
-#     def test_aliment_wrong_page(self):
-#         """Checks if the page is not accessible when
-#         you try to access a non-existing aliment
-#         """
-#         aliment = Aliment.objects.get(name="Chou Rouge")
-#         aliment_id = aliment.id + 1
-#         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
-#         response = self.client.get('/aliment/' + str(aliment_id) + '/')
-#         self.assertEqual(response.status_code, 404)
-
-#     def test_aliment_page_not_logged_in(self):
-#         """Checks if the page is not accessible when
-#         users aren't logged in
-#         """
-#         aliment = Aliment.objects.get(name="Chou Rouge")
-#         aliment_id = aliment.id
-#         response = self.client.get('/aliment/' + str(aliment_id) + '/')
-#         self.assertEqual(response.status_code, 302)
-
-#     def test_aliment_page_logged_in(self):
-#         """Checks if the page is accessible when
-#         users are logged in
-#         """
-#         aliment = Aliment.objects.get(name="Chou Rouge")
-#         aliment_id = aliment.id
-#         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
-#         response = self.client.get('/aliment/' + str(aliment_id) + '/')
-#         self.assertEqual(response.status_code, 200)
-
-
-# class MesProduitsTestCase(TestCase):
-#     """Tests of the mesproduits view"""
-#     def setUp(self):
-#         """Setting up the tests"""
-#         user = User.objects.create_user(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA")
-#         user.save()
-
-#     def test_mesproduits_page_not_logged_in(self):
-#         """Checks if the page is not accessible when
-#         users aren't logged in
-#         """
-#         response = self.client.get(reverse('mesproduits'))
-#         self.assertEqual(response.status_code, 302)
-
-#     def test_mesproduits_page_logged_in(self):
-#         """Checks if the page is accessible when
-#         users are logged in
-#         """
-#         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
-#         response = self.client.get(reverse('mesproduits'))
-#         self.assertEqual(response.status_code, 200)
-
-
-# class MentionsLegalesTestCase(TestCase):
-#     """Tests of the mentionslegales view"""
-#     def test_index_page(self):
-#         """Checks if the page is accessible"""
-#         response = self.client.get(reverse('mentionslegales'))
-#         self.assertEqual(response.status_code, 200)
-
-
-# class ResetPasswordTestCase(TestCase):
-#     """Tests for the password reset functionnality"""
-#     def test_reset_password_page(self):
-#         """Checks if the page is accessible"""
-#         response = self.client.get(reverse('password_reset'))
-#         self.assertEqual(response.status_code, 200)
-
-#     def test_send_reset_password(self):
-#         """Check if an email has been sent"""
-#         user = User.objects.create_user(username="Yoshi54", email="g.barboteau@gmail.com", password="FANDECYRILHANOUNA")
-#         user.save()
-#         response = self.client.post(reverse('password_reset'),{'email':'g.barboteau@gmail.com'})
-#         self.assertEqual(response.status_code, 302)
-#         self.assertEqual(len(mail.outbox), 1)
-#         self.assertEqual(mail.outbox[0].subject, 'Password reset on testserver')
-
-
-# class AddSubstituteTestCase(TestCase):
-#     """Test for the adding substitute functionnality"""
-#     def setUp(self):
-#         """Set up the tests"""
-#         user = User.objects.create_user(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA")
-#         user.save()
-#         aliment1 = Aliment.objects.create(name="Coca-Cola", category="Soda", nutriscore="e")
-#         aliment1.save()
-#         aliment2 = Aliment.objects.create(name="Coca Light", category="Soda", nutriscore="d")
-#         aliment2.save()
-
-#     def test_add_substitute_not_logged_in(self):
-#         """Checks if the page is not accessible when
-#         users aren't logged in
-#         """
-#         aliment = Aliment.objects.get_or_create(name="Coca-Cola", category="Soda", nutriscore="e")
-#         response = self.client.get('/add-product/' + str(aliment[0].id) + '/')
-#         self.assertEqual(response.status_code, 302)
-
-#     def test_add_substitute_logged_in(self):
-#         """Checks if the page is accessible when
-#         users are logged in
-#         """
-#         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
-#         aliment = Aliment.objects.get_or_create(name="Coca Light")
-#         response = self.client.get('/add-product/' + str(aliment[0].id) + '/')
-#         self.assertEqual(response.status_code, 200)
-
-
-# class RemoveSubstituteTestCase(TestCase):
-#     """Test for the removing substitute functionnality"""
-#     def setUp(self):
-#         """Set up the tests"""
-#         user = User.objects.create_user(username="Yoshi54", email="yoshi54@caramail.com", password="FANDECYRILHANOUNA")
-#         user.save()
-#         aliment = Aliment.objects.create(name="Coca-Cola", category="Soda", nutriscore="e")
-#         aliment.save()
-#         substitute = Substitute.objects.create(user_id=user, aliment_id=aliment)
-#         substitute.save()
-
-#     def test_add_substitute_not_logged_in(self):
-#         """Checks if the page is not accessible when
-#         users aren't logged in
-#         """
-#         my_user = User.objects.get(username="Yoshi54")
-#         my_aliment = Aliment.objects.get(name="Coca-Cola")
-#         my_substitute = Substitute.objects.get(user_id=my_user, aliment_id=my_aliment)
-#         response = self.client.get('/remove-product/' + str(my_substitute.aliment_id_id) + '/')
-#         self.assertEqual(response.status_code, 302)
-
-#     def test_add_substitute_logged_in(self):
-#         """Checks if the page is accessible when
-#         users are logged in
-#         """
-#         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
-#         my_user = User.objects.get(username="Yoshi54")
-#         my_aliment = Aliment.objects.get(name="Coca-Cola")
-#         my_substitute = Substitute.objects.get(user_id=my_user, aliment_id=my_aliment)
-#         response = self.client.get('/remove-product/' + str(my_substitute.aliment_id_id) + '/')
-#         self.assertEqual(response.status_code, 200)
-
-
-# def account(request):
-#     my_user = request.user
-#     template = loader.get_template('application/account.html')
-#     context = {'user': my_user}
-#     return HttpResponse(template.render(context,request=request))
