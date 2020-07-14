@@ -133,22 +133,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+# STATIC_TMP = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-if os.environ.get('ENV') == 'PRODUCTION':
-    # Static files settings
-    STATIC_URL = '/static/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
-    # Simplified static file serving.
-    # https://warehouse.python.org/project/whitenoise/
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-    db_from_env = dj_database_url.config(conn_max_age=500)
-    DATABASES['default'].update(db_from_env)
-else:
-    STATIC_URL = '/static/'
-
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "static")
-    ]
+DEBUG_PROPAGATE_EXCEPTIONS = True
