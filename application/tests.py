@@ -50,34 +50,34 @@ class ModelsTestCase(TestCase):
 
 class UtilsTestsCase(TestCase):
     """Tests all of the utils fonction"""
-	def test_getcitydepartmentandregion(self):
+    def test_getcitydepartmentandregion(self):
         """Tests the GetCityDepartementAndRegion() function"""
-		test_postal_code = '83720'
-		self.assertSequenceEqual(GetCityDepartementAndRegion(test_postal_code), ['TRANS EN PROVENCE', 'Var', "Provence-Alpes-Côte d'Azur"])
+        test_postal_code = '83720'
+        self.assertSequenceEqual(GetCityDepartementAndRegion(test_postal_code), ['TRANS EN PROVENCE', 'Var', "Provence-Alpes-Côte d'Azur"])
 
-	def test_getzipcodefromdepartement(self):
+    def test_getzipcodefromdepartement(self):
         """Tests the GetZipCodeFromDepartment() function"""
-		test_zipcode = 'Var'
-		self.assertDictEqual(GetZipCodeFromDepartment(test_zipcode), {'postal_code': '83', 'department': 'Var'})
+        test_zipcode = 'Var'
+        self.assertDictEqual(GetZipCodeFromDepartment(test_zipcode), {'postal_code': '83', 'department': 'Var'})
 
-	def test_doeskeyexists_true(self):
+    def test_doeskeyexists_true(self):
         """Tests the DoesKeyExists() function"""
-		test_key = 'name'
-		test_dict = {'age': 16, 'name': 'Miles Prowler', 'job': 'Mecanic'}
-		self.assertIs(DoesKeyExists(test_key, test_dict), True)
+        test_key = 'name'
+        test_dict = {'age': 16, 'name': 'Miles Prowler', 'job': 'Mecanic'}
+        self.assertIs(DoesKeyExists(test_key, test_dict), True)
 
-	def test_doeskeyexists_false(self):
+    def test_doeskeyexists_false(self):
         """Tests the DoesKeyExists() function"""
-		test_key = 'pseudo'
-		test_dict = {'age': 16, 'name': 'Miles Prowler', 'job': 'Mecanic'}
-		self.assertIs(DoesKeyExists(test_key, test_dict), False)
+        test_key = 'pseudo'
+        test_dict = {'age': 16, 'name': 'Miles Prowler', 'job': 'Mecanic'}
+        self.assertIs(DoesKeyExists(test_key, test_dict), False)
 
-	def test_getnote(self):
+    def test_getnote(self):
         """Tests the GetNote() function"""
-		note = 1.5
-		positive_reviews = 3
-		negative_reviews = 7
-		self.assertEqual(note, GetNote(positive_reviews, negative_reviews))
+        note = 1.5
+        positive_reviews = 3
+        negative_reviews = 7
+        self.assertEqual(note, GetNote(positive_reviews, negative_reviews))
 
 
 class IndexPageTestCase(TestCase):
