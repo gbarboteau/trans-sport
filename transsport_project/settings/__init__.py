@@ -115,9 +115,9 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "purbeurre9999@gmail.com"
+EMAIL_HOST_USER = "trans.sport.fr@gmail.com"
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') 
-DEFAULT_FROM_EMAIL = 'Pur Beurre <purbeurre9999@gmail.com>'
+DEFAULT_FROM_EMAIL = 'Trans-sport <trans.sport.fr@gmail.com>'
 
 
 # Internationalization
@@ -134,15 +134,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
-]
-
-
 if os.environ.get('ENV') == 'PRODUCTION':
-
     # Static files settings
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -154,3 +146,9 @@ if os.environ.get('ENV') == 'PRODUCTION':
 
     db_from_env = dj_database_url.config(conn_max_age=500)
     DATABASES['default'].update(db_from_env)
+else:
+    STATIC_URL = '/static/'
+
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "static")
+    ]
