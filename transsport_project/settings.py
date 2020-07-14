@@ -83,8 +83,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql', # on utilise l'adaptateur postgresql
         'NAME': 'transsport', # le nom de notre base de donnees creee precedemment
         'USER': 'Gabrielle', # attention : remplacez par votre nom d'utilisateur
-        'PASSWORD': '',
-        'HOST': '',
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 
