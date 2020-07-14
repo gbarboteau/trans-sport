@@ -153,13 +153,13 @@ class AccountTestCase(TestCase):
         user.save()
 
     def test_account_logged_in(self):
-    """Checks if the user is logged in"""
+        """Checks if the user is logged in"""
         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
         response = self.client.get(reverse('account'))
         self.assertEqual(response.status_code, 200)
 
     def test_account_logged_in(self):
-    """Checks if the user is not logged in"""
+        """Checks if the user is not logged in"""
         response = self.client.get(reverse('account'))
         self.assertEqual(response.status_code, 302)
 
@@ -184,13 +184,13 @@ class ModifyAccountTestCase(TestCase):
         user.save()
 
     def test_modify_account_page(self):
-    """Checks if the user is logged in"""
+        """Checks if the user is logged in"""
         self.client.login(username="Yoshi54", password="FANDECYRILHANOUNA")
         response = self.client.get(reverse('modify_account'))
         self.assertEqual(response.status_code, 302)
 
     def test_modify_account_page_not_logged_in(self):
-    """Checks if the user is not logged in"""
+        """Checks if the user is not logged in"""
         response = self.client.get(reverse('modify_account'))
         self.assertEqual(response.status_code, 302)
 
