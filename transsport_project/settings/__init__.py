@@ -25,7 +25,7 @@ GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 if os.environ.get('ENV') == 'PRODUCTION':
     DEBUG = False
 else:
-    DEBUG = False
+    DEBUG = True
 
 ALLOWED_HOSTS = ['.herokuapp.com', 'trans-sport.herokuapp.com', '127.0.0.1']
 
@@ -117,7 +117,7 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "trans.sport.fr@gmail.com"
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') 
-DEFAULT_FROM_EMAIL = 'Trans-Sport <trans.sport.fr@gmail.com>'
+DEFAULT_FROM_EMAIL = 'Trans-sport <trans.sport.fr@gmail.com>'
 
 
 # Internationalization
@@ -136,26 +136,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# STATIC_TMP = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "static")
-# ]
-
-# if os.environ.get('ENV') == 'PRODUCTION':
-
-# Static files settings
-# PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-
-# # Extra places for collectstatic to find static files.
-# STATICFILES_DIRS = (
-#     os.path.join(PROJECT_ROOT, 'static'),
-# )
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
