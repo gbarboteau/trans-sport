@@ -11,7 +11,7 @@ before_script:
     - psql -c 'create database travis_ci_test;' -U postgres
 
 
-env: DJANGO_SETTINGS_MODULE=purbeurre_project.settings.travis
+env: DJANGO_SETTINGS_MODULE=transsport_project.settings.travis
 
 script: 
     - python manage.py test
