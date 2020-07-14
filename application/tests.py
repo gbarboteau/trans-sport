@@ -454,5 +454,6 @@ class EditCommentDepartmentTestCase(TestCase):
     def test_edit_comment_while_not_logged_in(self):
         """Tests if a not logged in user cannot edit a comment"""
         # response = self.client.get(reverse('edit_comment', args=[test_place.id]), {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
+        test_place = Place.objects.get_or_create(name='Bar à Chicha de Knuckles')
         response = self.client.get('/all-places/' + str(test_place[0].id) + '/edit-comment/', {'comment': 'Bonjour', 'score_global': 'P', 'can_you_enter': False, 'are_you_safe_enough': True, 'is_mixed_lockers': True, 'is_inclusive_lockers': False, 'has_respectful_staff': True})
         self.assertEqual(response.status_code, 302)
