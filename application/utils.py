@@ -74,5 +74,7 @@ def GetCoordinates(street_adress, postal_code):
 
 class PlaceResource(ModelResource):
     class Meta:
-        queryset = Place.objects.all()
+        queryset = Place.objects.filter(can_be_seen=True)
         resource_name = 'place'
+        excludes = ['can_be_seen']
+        allowed_methods = ['get']
