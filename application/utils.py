@@ -1,5 +1,7 @@
 import json, requests, os
 from django.conf import settings
+from tastypie.resources import ModelResource
+from .models import Place
 
 def GetCityDepartementAndRegion(postal_code):
     """Get the city, the department and the region
@@ -70,3 +72,9 @@ def GetCoordinates(street_adress, postal_code):
     print(latitude)
     print(longitude)
     return(latitude, longitude)
+
+
+class PlaceResource(ModelResource):
+    class Meta:
+        queryset = Place.objects.all()
+        resource_name = 'place'

@@ -10,6 +10,7 @@ from django.dispatch import receiver
 
 class User(AbstractUser):
     """Model for a customized user model"""
+    email = models.EmailField(unique=True)
     gender = models.CharField(max_length=255)
     about_me = models.TextField(blank=True)
 
