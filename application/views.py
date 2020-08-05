@@ -248,7 +248,7 @@ def show_place(request, place_id):
     for comment in its_comments:
         if comment.user == request.user:
             does_comment_exists = True
-    context = {'this_place': this_place, 'its_comments': its_comments, 'does_comment_exists': does_comment_exists, 'place_id': place_id, 'latitude': coordinates[0], 'longitude': coordinates[1], 'GOOGLE_API_KEY': settings.GOOGLE_API_KEY}
+    context = {'this_place': this_place, 'its_comments': its_comments, 'does_comment_exists': does_comment_exists, 'place_id': place_id, 'latitude': coordinates[0], 'longitude': coordinates[1]}
     return HttpResponse(template.render(context,request=request))
 
 @login_required

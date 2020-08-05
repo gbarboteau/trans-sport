@@ -65,12 +65,10 @@ def GetNote(positive_reviews, negative_reviews):
 
 def GetCoordinates(street_adress, postal_code):
     """Get the coordinates of a given place"""
-    myRequest = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + street_adress + postal_code + "&key=" + settings.GOOGLE_API_KEY)      #(GOOGLE_MAP_ADRESS + "?key=" + GOOGLE_MAP_KEY + "&inputtype=textquery&input=" + search)
+    myRequest = requests.get("https://nominatim.openstreetmap.org/search?q=" + street_adress + " " + postal_code + "&format=json") 
     myInfos = myRequest.json()
-    latitude = myInfos["results"][0]["geometry"]["location"]["lat"]
-    longitude = myInfos["results"][0]["geometry"]["location"]["lng"]
-    print(latitude)
-    print(longitude)
+    latitude = myInfos[0]["lat"]
+    longitude = myInfos[0]["lon"]
     return(latitude, longitude)
 
 
