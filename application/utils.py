@@ -80,7 +80,7 @@ class PlaceResource(ModelResource):
         allowed_methods = ['get']
 
     def dehydrate(self, bundle):
-        myAdress = Adress.objects.get(pk=bundle.obj.id)
+        myAdress = Adress.objects.get(place=bundle.obj.id)
         print(bundle.obj)
         bundle.data['adress_street_adress'] = myAdress.street_adress
         bundle.data['adress_city'] = myAdress.city
