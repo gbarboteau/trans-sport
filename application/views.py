@@ -21,6 +21,9 @@ from .tokens import account_activation_token
 
 import random
 
+from rest_framework import viewsets
+from .serializers import PlaceSerializer
+
 User = get_user_model()
 
 def index(request):
@@ -314,3 +317,12 @@ def make_comment(request, place_id):
         form = CommentForm()
         context = {'user': my_user, 'form': form, 'errors': form.errors}
         return HttpResponse(template.render(context,request=request))
+
+
+class PlaceViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Place.objects.all().filter(can_be_seen=True).order_by("id")
+    serializer_class = PlaceSerializer
+
+# class AdressViewSet(viewsets.ModelViewSet):
+#     queryset = Adress.objects.all()
+#     serializer_class = AdressSerializer

@@ -71,27 +71,27 @@ def GetCoordinates(street_adress, postal_code):
     longitude = myInfos[0]["lon"]
     return(latitude, longitude)
 
+#Previous API with tastypie
+# class PlaceResource(ModelResource):
+#     class Meta:
+#         queryset = Place.objects.all().filter(can_be_seen=True)
+#         resource_name = 'place'
+#         excludes = ['can_be_seen']
+#         allowed_methods = ['get']
 
-class PlaceResource(ModelResource):
-    class Meta:
-        queryset = Place.objects.all().filter(can_be_seen=True)
-        resource_name = 'place'
-        excludes = ['can_be_seen']
-        allowed_methods = ['get']
-
-    def dehydrate(self, bundle):
-        myAdress = Adress.objects.get(place=bundle.obj.id)
-        print(bundle.obj)
-        bundle.data['adress_street_adress'] = myAdress.street_adress
-        bundle.data['adress_city'] = myAdress.city
-        bundle.data['adress_postal_code'] = myAdress.postal_code
-        bundle.data['adress_departement'] = myAdress.departement
-        bundle.data['adress_region'] = myAdress.region
-        allComments = Comment.objects.all().filter(place_id=bundle.obj.id)
-        bundle.data['note'] = GetNote(allComments.filter(score_global='P').count(), allComments.filter(score_global='N').count())
-        bundle.data['note_can_you_enter'] = GetNote(allComments.filter(can_you_enter=True).count(), allComments.filter(can_you_enter =False).count())
-        bundle.data['note_are_you_safe_enough'] = GetNote(allComments.filter(are_you_safe_enough=True).count(), allComments.filter(are_you_safe_enough =False).count())
-        bundle.data['note_is_mixed_lockers'] = GetNote(allComments.filter(is_mixed_lockers=True).count(), allComments.filter(is_mixed_lockers =False).count())
-        bundle.data['note_is_inclusive_lockers'] = GetNote(allComments.filter(is_inclusive_lockers=True).count(), allComments.filter(is_inclusive_lockers =False).count())
-        bundle.data['note_has_respectful_staff'] = GetNote(allComments.filter(has_respectful_staff=True).count(), allComments.filter(has_respectful_staff =False).count())
-        return bundle
+#     def dehydrate(self, bundle):
+#         myAdress = Adress.objects.get(place=bundle.obj.id)
+#         print(bundle.obj)
+#         bundle.data['adress_street_adress'] = myAdress.street_adress
+#         bundle.data['adress_city'] = myAdress.city
+#         bundle.data['adress_postal_code'] = myAdress.postal_code
+#         bundle.data['adress_departement'] = myAdress.departement
+#         bundle.data['adress_region'] = myAdress.region
+#         allComments = Comment.objects.all().filter(place_id=bundle.obj.id)
+#         bundle.data['note'] = GetNote(allComments.filter(score_global='P').count(), allComments.filter(score_global='N').count())
+#         bundle.data['note_can_you_enter'] = GetNote(allComments.filter(can_you_enter=True).count(), allComments.filter(can_you_enter =False).count())
+#         bundle.data['note_are_you_safe_enough'] = GetNote(allComments.filter(are_you_safe_enough=True).count(), allComments.filter(are_you_safe_enough =False).count())
+#         bundle.data['note_is_mixed_lockers'] = GetNote(allComments.filter(is_mixed_lockers=True).count(), allComments.filter(is_mixed_lockers =False).count())
+#         bundle.data['note_is_inclusive_lockers'] = GetNote(allComments.filter(is_inclusive_lockers=True).count(), allComments.filter(is_inclusive_lockers =False).count())
+#         bundle.data['note_has_respectful_staff'] = GetNote(allComments.filter(has_respectful_staff=True).count(), allComments.filter(has_respectful_staff =False).count())
+#         return bundle

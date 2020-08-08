@@ -17,11 +17,15 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.contrib.auth import views as auth_views
 from django.conf.urls import include
-from .utils import PlaceResource
+# from .utils import PlaceResource
+from rest_framework import routers  
 
 from . import views
 
-place_resource = PlaceResource()
+# place_resource = PlaceResource()
+router = routers.DefaultRouter()
+router.register(r'place', views.PlaceViewSet)
+# router.register(r'adress', views.AdressViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -43,5 +47,6 @@ urlpatterns = [
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='application/registration/password_reset_confirm.html'), name='password_reset_confirm'),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='application/registration/password_reset_done.html'), name='password_reset_done'),
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='application/registration/password_reset_complete.html'), name='password_reset_complete'),
-    path('api/', include(place_resource.urls)),
+    # path('api/', include(rest_framework.urls)),
+    path('api/', include(router.urls)),
 ]
