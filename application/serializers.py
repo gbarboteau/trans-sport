@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from .models import Place, Adress, Category, Comment
 from .utils import GetNote
 
-    '''Former API with TastyPie'''
+    #Former API with Tastypie
+
         # fields = ('street_adress', 'postal_code', 'city', 'departement', 'region')
     # def get(self, request, *args, **kw):
     #     # Process any get params that you may need
